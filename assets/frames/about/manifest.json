@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "generated": "2026-01-21T20:39:57.250Z",
+  "totalFrames": 120,
+  "fps": 30,
+  "duration": 4,
+  "dimensions": {
+    "width": 960,
+    "height": 540
+  },
+  "format": "png",
+  "basePath": "/assets/frames/about/",
+  "framePrefix": "frame_",
+  "framePadding": 4,
+  "sections": [
+    {
+      "name": "p1",
+      "label": "S Fragmentation",
+      "startFrame": 0,
+      "endFrame": 39
+    },
+    {
+      "name": "p2",
+      "label": "Mesh Formation",
+      "startFrame": 40,
+      "endFrame": 79
+    },
+    {
+      "name": "p3",
+      "label": "Clarity",
+      "startFrame": 80,
+      "endFrame": 119
+    }
+  ],
+  "status": "generated"
+}

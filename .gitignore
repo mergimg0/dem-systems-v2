@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor
+.vscode/
+.idea/
+
+# Test output
+playwright-report/
+test-results/
+
+# Claude/TLDR local
+.claude/
+.tldr/
+.tldrignore
+
+# Build output
+dist/
+
+# Local thoughts/plans
+thoughts/

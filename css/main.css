@@ -1,0 +1,2325 @@
+/* DEM Systems - Design System
+   Philosophy: "Build for the visually impaired in light mode"
+   Michelin-star minimalism, extreme whitespace, whisper-quiet
+*/
+
+/* ==========================================================================
+   Custom Properties
+   ========================================================================== */
+
+:root {
+  /* Colors - Pure Monochrome */
+  --color-bg: #ffffff;
+  --color-text: #000000;
+  --color-text-muted: #666666;
+
+  /* Typography Scale - Satoshi */
+  --font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Font sizes - fluid typography */
+  --font-size-hero: clamp(48px, 8vw, 96px);
+  --font-size-section: clamp(24px, 4vw, 36px);
+  --font-size-body: clamp(16px, 1.5vw, 21px);
+  --font-size-small: 14px;
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Line heights */
+  --line-height-heading: 1.1;
+  --line-height-body: 1.6;
+
+  /* Spacing - Vertical rhythm */
+  --space-section: clamp(60px, 10vh, 100px);
+  --space-element: clamp(24px, 4vh, 48px);
+  --space-small: clamp(16px, 2vh, 24px);
+
+  /* Container */
+  --container-padding: clamp(24px, 8vw, 160px);
+  --container-max-width: 1200px;
+
+  /* Transitions */
+  --ease-out-quart: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --duration-fast: 0.2s;
+  --duration-medium: 0.4s;
+  --duration-slow: 0.6s;
+
+  /* Micro-interaction timing (invisible excellence) */
+  --ease-snappy: cubic-bezier(0.34, 1.56, 0.64, 1);  /* Quick with 8% overshoot */
+  --ease-subtle: cubic-bezier(0.25, 0.46, 0.45, 0.94);  /* Gentle, barely perceptible */
+  --duration-micro: 100ms;  /* Hover states, micro-feedback */
+  --duration-base: 150ms;   /* State changes */
+  --duration-reveal: 200ms; /* Reveals, transitions */
+
+  /* Navigation */
+  --nav-height: 72px;
+  --nav-height-mobile: 60px;
+  --nav-transition-duration: 450ms;
+  --typewriter-char-duration: 50ms;
+}
+
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+.hero-title {
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-black);
+  line-height: var(--line-height-heading);
+  letter-spacing: -0.02em;
+}
+
+.hero-tagline {
+  font-size: var(--font-size-section);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-heading);
+  color: var(--color-text-muted);
+  /* Spacing from hero title */
+  margin-top: var(--space-small);
+  /* Fixed height prevents layout shift during typewriter animation */
+  min-height: calc(var(--font-size-section) * var(--line-height-heading));
+}
+
+/* ==========================================================================
+   Typewriter Effect
+   ========================================================================== */
+
+.typewriter {
+  display: inline-flex;
+  align-items: baseline;
+  /* Ensure consistent height even when text is empty */
+  min-height: 1em;
+}
+
+.typewriter__text {
+  /* Inherits font styles from .hero-tagline parent */
+  /* Use inline-block to maintain height even when empty */
+  display: inline-block;
+  min-width: 1px; /* Ensure element exists even when empty */
+}
+
+.typewriter__cursor {
+  font-weight: 100;
+  margin-left: 2px;
+  opacity: 1;
+  /* Use same color as parent text */
+  color: inherit;
+}
+
+.typewriter__cursor--blink {
+  animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+/* ==========================================================================
+   Hero Video Reveal Effect
+   ========================================================================== */
+
+.hero-title-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Video reveal canvas - positioned behind hero content */
+.video-reveal-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure hero section can contain the absolute canvas */
+.section--hero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hero content stays above the video canvas */
+.section--hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.section-title {
+  font-size: var(--font-size-section);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  letter-spacing: -0.01em;
+}
+
+.body-text {
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  max-width: 60ch;
+}
+
+.body-text p + p {
+  margin-top: var(--space-element);
+}
+
+.small-text {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+/* Main content - positioned between nav background and blend layer */
+#main-content {
+  position: relative;
+  z-index: 1001;
+}
+
+/* Footer - same stacking context as main content for blend overlay */
+footer.container {
+  position: relative;
+  z-index: 1001;
+  padding-bottom: var(--space-element);
+}
+
+/* Footer layout with motion toggle */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-small);
+}
+
+/* Motion Toggle Button */
+.motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 1em;
+  font-family: inherit;
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-base) var(--ease-subtle),
+    color var(--duration-base) var(--ease-subtle);
+}
+
+.motion-toggle:hover {
+  border-color: rgba(0, 0, 0, 0.2);
+  color: var(--color-text);
+}
+
+.motion-toggle:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.motion-toggle__label {
+  font-weight: var(--font-weight-medium);
+}
+
+.motion-toggle__status {
+  opacity: 0.7;
+}
+
+/* Motion toggle off state */
+.motion-toggle[aria-pressed="false"] {
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+.motion-toggle[aria-pressed="false"] .motion-toggle__status {
+  opacity: 0.5;
+}
+
+/* Hide motion toggle if reduced motion is system preference */
+@media (prefers-reduced-motion: reduce) {
+  .motion-toggle {
+    display: none;
+  }
+}
+
+.section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
+}
+
+/* Hero section - full viewport centered */
+.section--hero {
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  padding-top: var(--nav-height);
+  box-sizing: border-box;
+}
+
+/* About and Contact - left aligned, content height only */
+.section--about,
+.section--contact {
+  align-items: flex-start;
+  min-height: auto;
+}
+
+/* Extra breathing room before contact - About should nearly disappear first */
+.section--contact {
+  margin-top: 50vh;
+  padding-bottom: 35vh; /* Allow scrolling contact up but not too high */
+}
+
+/* ==========================================================================
+   Thread Canvas (WebGL)
+   ========================================================================== */
+
+#thread-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Micro-interactions
+   ========================================================================== */
+
+/* Interactive base class - tactile press feedback like quality keyboard */
+.interactive {
+  transition: transform var(--duration-micro) var(--ease-snappy);
+}
+
+.interactive:active {
+  transform: scale(0.97);
+}
+
+/* Text link - whisper hint hover (opacity shift) */
+.text-link {
+  opacity: 0.85;
+  transition: opacity var(--duration-micro) var(--ease-subtle);
+}
+
+.text-link:hover,
+.text-link:focus {
+  opacity: 1;
+}
+
+/* Link underline draw effect */
+a:not(.cta):not(.text-link) {
+  background-image: linear-gradient(var(--color-text), var(--color-text));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size var(--duration-medium) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a:not(.cta):not(.text-link):hover,
+a:not(.cta):not(.text-link):focus {
+  background-size: 100% 1px;
+  transition: background-size var(--duration-medium) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* CTA button - tactile with lift on hover */
+.cta {
+  display: inline-block;
+  font-family: inherit;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  padding: 1em 2em;
+  border: 1px solid var(--color-text);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    opacity var(--duration-base) var(--ease-subtle),
+    transform var(--duration-micro) var(--ease-snappy),
+    box-shadow var(--duration-base) var(--ease-subtle);
+}
+
+.cta:hover,
+.cta:focus {
+  opacity: 0.85;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.cta:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+/* Button lift pattern (for secondary buttons) */
+.button-lift {
+  transition:
+    transform var(--duration-base) var(--ease-subtle),
+    box-shadow var(--duration-base) var(--ease-subtle);
+}
+
+.button-lift:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.button-lift:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   Loading Progress Bar (top of viewport)
+   ========================================================================== */
+
+.loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--color-text);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 200ms linear;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-bar.visible {
+  opacity: 1;
+}
+
+.loading-bar.indeterminate {
+  animation: loading-indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-indeterminate {
+  0% { transform: scaleX(0); transform-origin: left; }
+  50% { transform: scaleX(1); transform-origin: left; }
+  50.1% { transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; }
+}
+
+/* ==========================================================================
+   Contact Form (focus, validation, submit, success transformation)
+   ========================================================================== */
+
+/* Form container - handles height transition for success */
+.form-container {
+  position: relative;
+  transition: height var(--duration-reveal) var(--ease-subtle);
+  overflow: hidden;
+}
+
+/* Form fields wrapper */
+.form-fields {
+  transition: opacity var(--duration-reveal) var(--ease-subtle);
+}
+
+.form-fields.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Field wrapper for validation state */
+.field-wrapper {
+  position: relative;
+  margin-bottom: var(--space-small);
+}
+
+/* Form field base */
+.form-field {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1em;
+  font-family: inherit;
+  font-size: var(--font-size-body);
+  width: 100%;
+  background: transparent;
+  border-radius: 0;
+  transition:
+    border-color var(--duration-base) var(--ease-subtle),
+    box-shadow var(--duration-base) var(--ease-subtle);
+}
+
+.form-field:focus {
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.03);
+  outline: none;
+}
+
+.form-field::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+/* Validation states */
+.field-valid .form-field {
+  border-color: rgba(0, 128, 0, 0.3);
+}
+
+.field-error .form-field {
+  border-color: rgba(200, 0, 0, 0.3);
+}
+
+/* Error message */
+.field-error-message {
+  font-size: 0.85em;
+  color: rgba(200, 0, 0, 0.8);
+  margin-top: 0.5em;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity var(--duration-base) var(--ease-subtle),
+    transform var(--duration-base) var(--ease-subtle);
+}
+
+.field-error .field-error-message {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Submit button */
+.submit-button {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  padding: 1em 2em;
+  border: 1px solid var(--color-text);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    opacity var(--duration-base) var(--ease-subtle),
+    transform var(--duration-micro) var(--ease-snappy),
+    box-shadow var(--duration-base) var(--ease-subtle);
+}
+
+.submit-button:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit-button.submitting {
+  pointer-events: none;
+}
+
+.submit-button .button-text {
+  transition: opacity var(--duration-base) var(--ease-subtle);
+}
+
+.submit-button.submitting .button-text {
+  opacity: 0;
+}
+
+/* Button loader (progress bar inside button) */
+.button-loader {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: currentColor;
+  width: 0;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-subtle);
+}
+
+.submit-button.submitting .button-loader {
+  opacity: 1;
+  animation: progress-indeterminate 2s ease-in-out infinite;
+}
+
+@keyframes progress-indeterminate {
+  0% { width: 0; left: 0; }
+  50% { width: 100%; left: 0; }
+  50.1% { left: 0; }
+  100% { width: 0; left: 100%; }
+}
+
+/* Success message */
+.success-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition:
+    opacity var(--duration-reveal) var(--ease-subtle),
+    transform var(--duration-reveal) var(--ease-snappy);
+}
+
+.success-message.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.success-message h3 {
+  font-size: var(--font-size-section);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-small);
+}
+
+.success-message p {
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   Testimonial Carousel (auto-fade rotation)
+   ========================================================================== */
+
+.testimonial-carousel {
+  position: relative;
+  min-height: 150px;
+}
+
+.testimonial {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+  pointer-events: none;
+}
+
+.testimonial.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.testimonial.exiting {
+  opacity: 0;
+}
+
+.testimonial-quote {
+  font-size: var(--font-size-body);
+  font-style: italic;
+  line-height: var(--line-height-body);
+  margin-bottom: var(--space-small);
+}
+
+.testimonial-author {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   Service Card Interactions (border reveal + content shift)
+   ========================================================================== */
+
+.service-card {
+  position: relative;
+  padding: var(--space-small);
+  transition: transform var(--duration-base) var(--ease-subtle);
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: border-color var(--duration-base) var(--ease-subtle);
+  pointer-events: none;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+}
+
+.service-card:hover::before {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.service-card:active {
+  transform: scale(0.98);
+}
+
+.service-card .card-content {
+  transition: transform var(--duration-base) var(--ease-subtle);
+}
+
+.service-card:hover .card-content {
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Hero Reveal Animation (page load, not scroll)
+   ========================================================================== */
+
+.hero-reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--duration-reveal) var(--ease-snappy),
+    transform var(--duration-reveal) var(--ease-snappy);
+}
+
+.hero-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered delay for tagline */
+.hero-reveal--delayed {
+  transition-delay: 150ms;
+}
+
+/* ==========================================================================
+   Scroll Reveal Animation
+   ========================================================================== */
+
+[data-reveal] {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(20px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out-quart),
+    filter var(--duration-slow) var(--ease-out-quart),
+    transform var(--duration-slow) var(--ease-out-quart);
+}
+
+[data-reveal].visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* Stagger children reveals */
+[data-reveal-stagger] > * {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(20px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out-quart),
+    filter var(--duration-slow) var(--ease-out-quart),
+    transform var(--duration-slow) var(--ease-out-quart);
+}
+
+[data-reveal-stagger].visible > *:nth-child(1) { transition-delay: 0ms; opacity: 1; filter: blur(0); transform: translateY(0); }
+[data-reveal-stagger].visible > *:nth-child(2) { transition-delay: 100ms; opacity: 1; filter: blur(0); transform: translateY(0); }
+[data-reveal-stagger].visible > *:nth-child(3) { transition-delay: 200ms; opacity: 1; filter: blur(0); transform: translateY(0); }
+[data-reveal-stagger].visible > *:nth-child(4) { transition-delay: 300ms; opacity: 1; filter: blur(0); transform: translateY(0); }
+
+/* ==========================================================================
+   Semantic Animations - About Section
+   Semiotic mappings: friction, path, clarity, handle, focus
+   ========================================================================== */
+
+/* P1: Friction filter - feTurbulence + feDisplacementMap */
+.about-p1 {
+  filter: url(#friction-filter);
+  will-change: filter, opacity, transform;
+}
+
+/* P2: Clarity filter + path wrapper */
+.about-p2-wrapper {
+  position: relative;
+}
+
+.about-p2 {
+  position: relative;
+  will-change: filter, opacity, transform;
+}
+
+/* ==========================================================================
+   Typewriter Delete Animation
+   "No complicated jargon. No endless calls." backspaces away with cursor
+   ========================================================================== */
+
+.phrase-disappear {
+  display: inline;
+  position: relative;
+}
+
+/* Blinking cursor that appears during deletion */
+.phrase-disappear.typewriter-deleting::after {
+  content: '|';
+  display: inline;
+  font-weight: 100;
+  color: var(--color-text);
+  animation: cursor-blink 1s step-end infinite;
+  margin-left: 1px;
+}
+
+/* Hide element completely after deletion */
+.phrase-disappear.deleted {
+  display: none;
+}
+
+/* Text that shifts left after deletion */
+.phrase-shift {
+  display: inline;
+  transition: transform 0.4s var(--ease-out-quart);
+}
+
+.phrase-shift.shift-active {
+  transform: translateX(-0.25em);
+}
+
+/* Reduced motion: hide immediately instead of typewriter effect */
+@media (prefers-reduced-motion: reduce) {
+  .phrase-disappear,
+  .phrase-shift {
+    transition: none;
+  }
+
+  .phrase-disappear.typewriter-deleting::after {
+    display: none;
+  }
+}
+
+/* Path SVG: "path of least resistance" */
+.path-svg {
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  opacity: 0;
+  pointer-events: none;
+  color: var(--color-text);
+  will-change: opacity;
+}
+
+.path-svg path {
+  will-change: stroke-dashoffset;
+}
+
+/* P3: Handle + Focus wrapper */
+.about-p3-wrapper {
+  position: relative;
+}
+
+.about-p3 {
+  will-change: opacity, transform;
+  transform-origin: left center;
+}
+
+/* Code symbols: visual complexity being "handled" */
+.code-symbols {
+  position: absolute;
+  top: 50%;
+  left: -60px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 10px;
+  color: var(--color-text);
+}
+
+.code-symbol {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Responsive: hide code symbols on smaller screens */
+@media (max-width: 900px) {
+  .code-symbols {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Word-Level Semantic Animations
+   Bold, expressive animations on individual words
+   ========================================================================== */
+
+/* Base word animation styles */
+.word-animate {
+  display: inline-block;
+  position: relative;
+  will-change: transform, opacity, filter;
+}
+
+/* FRICTION - shake/glitch effect that settles */
+.word-friction {
+  animation: none;
+}
+
+.word-friction.active {
+  animation: friction-shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes friction-shake {
+  0%, 100% {
+    transform: translateX(0);
+    filter: blur(0);
+  }
+  10% {
+    transform: translateX(-4px) skewX(-2deg);
+    filter: blur(1px);
+  }
+  20% {
+    transform: translateX(4px) skewX(2deg);
+    filter: blur(1px);
+  }
+  30% {
+    transform: translateX(-3px) skewX(-1deg);
+  }
+  40% {
+    transform: translateX(3px) skewX(1deg);
+  }
+  50% {
+    transform: translateX(-2px);
+  }
+  60% {
+    transform: translateX(2px);
+  }
+  70% {
+    transform: translateX(-1px);
+  }
+  80% {
+    transform: translateX(1px);
+  }
+}
+
+/* ELIMINATE - strike-through slash effect */
+.word-eliminate {
+  position: relative;
+}
+
+.word-eliminate::after {
+  content: '';
+  position: absolute;
+  left: -5%;
+  top: 50%;
+  width: 0;
+  height: 3px;
+  background: currentColor;
+  transform: translateY(-50%) rotate(-5deg);
+  transition: width 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.word-eliminate.active::after {
+  width: 110%;
+}
+
+.word-eliminate.active {
+  animation: eliminate-flash 0.3s ease-out;
+}
+
+@keyframes eliminate-flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* CLARITY - glow effect on scroll trigger */
+.word-clarity {
+  transition: text-shadow 0.8s ease-out;
+}
+
+.word-clarity.active {
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(255, 255, 255, 0.4),
+    0 0 60px rgba(255, 255, 255, 0.2);
+  animation: clarity-pulse 0.6s ease-out;
+}
+
+@keyframes clarity-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Glow fades after initial reveal */
+.word-clarity.revealed {
+  text-shadow: none;
+  transition: text-shadow 1s ease-out 0.5s;
+}
+
+/* ==========================================================================
+   BESPOKE ASSEMBLY - Hover-triggered sequential assembly
+   Semiotic: Precision engineering + collaboration
+   Metaphor: Components snapping into place
+   Timing: Snappy/decisive with hard stops
+   ========================================================================== */
+
+.bespoke-container {
+  display: inline;
+  cursor: pointer;
+  position: relative;
+}
+
+.bespoke-word {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* Hover state - words "snap" with slight mechanical offset */
+.bespoke-container:hover .bespoke-word {
+  transform: translateY(-2px);
+}
+
+/* Assembled state - precision alignment */
+.bespoke-container.assembled .bespoke-word {
+  transform: translateY(0) scale(1.02);
+  text-shadow: 0 0 1px currentColor;
+}
+
+/* Staggered entry via CSS custom property */
+.bespoke-word {
+  transition-delay: calc(var(--word-index) * 50ms);
+}
+
+/* Underline that "assembles" on hover */
+.bespoke-container::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bespoke-container:hover::after,
+.bespoke-container.assembled::after {
+  width: 100%;
+}
+
+/* ==========================================================================
+   CLARITY MANIFEST - Word-by-word line break animation
+   Semiotic: Alignment/ordering (chaos to structure)
+   All words on a single new line, 100% width justified
+   Uses FLIP animation for smooth layout transitions
+   ========================================================================== */
+
+.clarity-container {
+  display: inline;
+  position: relative;
+}
+
+.clarity-word {
+  display: inline-block;
+  will-change: transform;
+  white-space: nowrap;
+}
+
+/* Pre-animation: words in normal inline flow */
+.clarity-container .clarity-word {
+  margin-right: 0.3em;
+}
+
+/* Manifest active: 100% width, evenly spaced words */
+.clarity-container.manifest-active {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.clarity-container.manifest-active .clarity-word {
+  margin-right: 0;
+}
+
+/* ==========================================================================
+   COMPLEX STAGGER - Character wave animation
+   First phrase: DOWN with steps easing (mechanical)
+   Second phrase: UP (aspirational)
+   ========================================================================== */
+
+.complex-container {
+  display: inline-block;
+  position: relative;
+}
+
+.complex-char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Container for the full sentence to handle overflow from drastic movements */
+.body-text p:has(.complex-stagger) {
+  overflow: visible;
+  padding: 2.5rem 0;
+  margin: -2rem 0;
+}
+
+/* Reduced motion: disable semantic animations */
+@media (prefers-reduced-motion: reduce) {
+  .about-p1,
+  .about-p2,
+  .about-p3 {
+    filter: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .path-svg {
+    opacity: 0.3 !important;
+  }
+
+  .path-svg path {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .code-symbol {
+    opacity: 0.15 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   Scroll Indicator
+   ========================================================================== */
+
+.scroll-indicator {
+  position: absolute;
+  bottom: var(--space-element);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 1;
+  transition: opacity var(--duration-medium) var(--ease-out-quart);
+}
+
+.scroll-indicator.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-indicator__text {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Contact Section
+   ========================================================================== */
+
+.contact-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-element);
+}
+
+.contact-subtext {
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+  opacity: 0.7;
+  max-width: 40ch;
+}
+
+.contact-email {
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+}
+
+/* Calendly embed container */
+.calendly-container {
+  width: 100%;
+  max-width: 600px;
+  margin-top: var(--space-small);
+}
+
+/* ==========================================================================
+   Skip Link (Accessibility)
+   ========================================================================== */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  padding: 1em;
+  background: var(--color-text);
+  color: var(--color-bg);
+  z-index: 1000;
+  transition: top var(--duration-fast) var(--ease-out-quart);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen reader only - visually hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Cursor Interactions
+   ========================================================================== */
+
+/* Native cursor improvements (always active) */
+body {
+  cursor: default;
+}
+
+a, button, [role="button"], .interactive, .cta, .submit-button {
+  cursor: pointer;
+}
+
+input, textarea {
+  cursor: text;
+}
+
+/* Custom cursor (opt-in enhancement, requires cursor.js)
+   Small dot that morphs on interactive elements */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 2147483647; /* Maximum possible z-index */
+  opacity: 0;
+  will-change: transform;
+  transition:
+    width 180ms cubic-bezier(0.4, 0, 0.2, 1),
+    height 180ms cubic-bezier(0.4, 0, 0.2, 1),
+    background 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* Ensure cursor is always rendered on top */
+  isolation: isolate;
+}
+
+/* Show cursor when initialized */
+.cursor-active .custom-cursor {
+  opacity: 1;
+}
+
+/* Hide cursor when mouse leaves window */
+.custom-cursor.cursor-hidden {
+  opacity: 0 !important;
+}
+
+/* Hide native cursor when custom cursor is active */
+.cursor-active,
+.cursor-active * {
+  cursor: none !important;
+}
+
+/* Morph to filled circle with inverted colors on interactive elements */
+.custom-cursor.interactive {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: none;
+  mix-blend-mode: difference;
+}
+
+/* Subtle zoom on hovered interactive elements */
+.cursor-active .cta:hover,
+.cursor-active a:hover {
+  transform: scale(1.02);
+  transition: transform 80ms ease-out;
+}
+
+/* Scale down on press */
+.custom-cursor.pressing {
+  width: 8px;
+  height: 8px;
+  transition: none;
+}
+
+/* Text cursor morph (vertical line) */
+.custom-cursor.text {
+  width: 2px;
+  height: 20px;
+  border-radius: 1px;
+}
+
+/* ==========================================================================
+   Sprite Proximity Animation System
+   Pokemon grass-style: rustles on proximity, pops on hover
+   ========================================================================== */
+
+/* Base trigger wrapper - inline positioning */
+.sprite-trigger {
+  position: relative;
+  display: inline;
+  cursor: default;
+}
+
+/* Sprite container - positioned beside text */
+.sprite-trigger__sprite {
+  position: absolute;
+  top: 50%;
+  right: -80px; /* Position to the right of text */
+  transform: translateY(-50%) scale(0.8);
+  width: 60px;
+  height: 60px;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s var(--ease-out-quart),
+    transform 0.3s var(--ease-out-quart);
+  z-index: 10;
+}
+
+/* Alternate positioning for variety */
+.sprite-trigger:nth-child(even) .sprite-trigger__sprite,
+[data-sprite="friction"] .sprite-trigger__sprite,
+[data-sprite="clarity"] .sprite-trigger__sprite {
+  right: auto;
+  left: -80px;
+}
+
+/* Sprite animation element - will hold the sprite sheet */
+.sprite-animation {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-text);
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  /* Placeholder style until real sprites are provided */
+}
+
+/* ==========================================================================
+   Proximity States - Pokemon Grass Rustle Effect
+   ========================================================================== */
+
+/* Outer proximity zone (150px) - subtle rustle begins */
+.sprite-trigger[data-proximity="outer"] .sprite-trigger__sprite {
+  opacity: 0.3;
+  transform: translateY(-50%) scale(0.85);
+  animation: sprite-wobble-subtle 1.2s ease-in-out infinite;
+}
+
+/* Inner proximity zone (75px) - clear wobble, faster */
+.sprite-trigger[data-proximity="inner"] .sprite-trigger__sprite {
+  opacity: 0.6;
+  transform: translateY(-50%) scale(0.9);
+  animation: sprite-wobble-medium 0.6s ease-in-out infinite;
+}
+
+/* Hover state - full pop, fast rotating loop */
+.sprite-trigger[data-state="hovering"] .sprite-trigger__sprite {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  animation: none;
+}
+
+.sprite-trigger[data-state="hovering"] .sprite-animation {
+  animation: sprite-rotate-placeholder 0.3s steps(8) infinite;
+}
+
+/* Exit state - graceful fade out */
+.sprite-trigger[data-state="exiting"] .sprite-trigger__sprite {
+  opacity: 0;
+  transform: translateY(-50%) scale(0.9);
+  transition:
+    opacity 0.5s var(--ease-out-quart),
+    transform 0.5s var(--ease-out-quart);
+}
+
+/* ==========================================================================
+   Sprite Animation Keyframes
+   ========================================================================== */
+
+/* Subtle wobble - outer proximity zone */
+@keyframes sprite-wobble-subtle {
+  0%, 100% {
+    transform: translateY(-50%) scale(0.85) translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-50%) scale(0.85) translateX(2px) rotate(1deg);
+  }
+  75% {
+    transform: translateY(-50%) scale(0.85) translateX(-2px) rotate(-1deg);
+  }
+}
+
+/* Medium wobble - inner proximity zone */
+@keyframes sprite-wobble-medium {
+  0%, 100% {
+    transform: translateY(-50%) scale(0.9) translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateY(-50%) scale(0.9) translateX(-4px) rotate(-3deg);
+  }
+  40% {
+    transform: translateY(-50%) scale(0.9) translateX(4px) rotate(3deg);
+  }
+  60% {
+    transform: translateY(-50%) scale(0.9) translateX(-3px) rotate(-2deg);
+  }
+  80% {
+    transform: translateY(-50%) scale(0.9) translateX(3px) rotate(2deg);
+  }
+}
+
+/* Placeholder rotation until real sprite sheets provided */
+@keyframes sprite-rotate-placeholder {
+  0% {
+    transform: rotate(0deg) scale(1);
+    background-color: var(--color-text);
+  }
+  25% {
+    transform: rotate(90deg) scale(1.05);
+    background-color: #333;
+  }
+  50% {
+    transform: rotate(180deg) scale(1);
+    background-color: var(--color-text);
+  }
+  75% {
+    transform: rotate(270deg) scale(1.05);
+    background-color: #333;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    background-color: var(--color-text);
+  }
+}
+
+/* ==========================================================================
+   Phrase #3 Special Behavior - Text Disappear and Shift
+   ========================================================================== */
+
+/* Container for the disappearing phrase */
+.sprite-trigger--disappear {
+  transition: opacity 0.5s var(--ease-out-quart);
+}
+
+.sprite-trigger--disappear.fade-out {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Text that shifts left when phrase #3 disappears */
+.p2-shift-text {
+  display: inline;
+  transition: transform 0.5s var(--ease-out-quart);
+}
+
+.p2-shift-text.shift-left {
+  display: inline-block;
+  transform: translateX(-10px);
+}
+
+/* ==========================================================================
+   Mobile Scroll Animation States
+   ========================================================================== */
+
+/* Mobile: sprites animate on scroll into view */
+@media (hover: none), (pointer: coarse) {
+  .sprite-trigger[data-state="scroll-triggered"] .sprite-trigger__sprite {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+    animation: sprite-mobile-pop 0.4s var(--ease-snappy) forwards;
+  }
+
+  .sprite-trigger[data-state="scroll-triggered"] .sprite-animation {
+    animation: sprite-rotate-placeholder 0.3s steps(8) 3;
+  }
+}
+
+@keyframes sprite-mobile-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* ==========================================================================
+   Sprite Sheet Placeholders (Replace with actual assets)
+   ========================================================================== */
+
+/* Individual sprite styles - replace background-image when assets provided */
+[data-sprite="bespoke"] .sprite-animation {
+  /* background-image: url('../assets/sprites/sprite-bespoke.webp'); */
+  background-color: var(--color-text);
+}
+
+[data-sprite="friction"] .sprite-animation {
+  /* background-image: url('../assets/sprites/sprite-friction.webp'); */
+  background-color: var(--color-text);
+}
+
+[data-sprite="jargon"] .sprite-animation {
+  /* background-image: url('../assets/sprites/sprite-jargon.webp'); */
+  background-color: var(--color-text);
+}
+
+[data-sprite="path"] .sprite-animation {
+  /* background-image: url('../assets/sprites/sprite-path.webp'); */
+  background-color: var(--color-text);
+}
+
+[data-sprite="clarity"] .sprite-animation {
+  /* background-image: url('../assets/sprites/sprite-clarity.webp'); */
+  background-color: var(--color-text);
+}
+
+[data-sprite="handle"] .sprite-animation {
+  /* background-image: url('../assets/sprites/sprite-handle.webp'); */
+  background-color: var(--color-text);
+}
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Hide all sprite animations for reduced motion users */
+  .sprite-trigger__sprite {
+    display: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal],
+  [data-reveal-stagger] > * {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
+
+  /* Hero elements immediately visible */
+  .hero-reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Remove testimonial rotation - show first only */
+  .testimonial-carousel .testimonial:not(:first-child) {
+    display: none;
+  }
+
+  .testimonial-carousel .testimonial:first-child {
+    position: relative;
+    opacity: 1;
+  }
+
+  /* Disable custom cursor */
+  .custom-cursor {
+    display: none;
+  }
+
+  /* Preserve native cursors */
+  .cursor-active,
+  .cursor-active * {
+    cursor: auto !important;
+  }
+
+  /* Disable hero video reveal effect */
+  .video-reveal-canvas {
+    display: none;
+  }
+
+  /* Preserve essential feedback (instant, no animation)
+     These states still change, just without motion */
+  .form-field:focus,
+  .interactive:active,
+  .cta:active,
+  .submit-button:active,
+  .field-error .form-field,
+  .field-valid .form-field,
+  .success-message.visible {
+    transition: none;
+  }
+
+  /* Navigation - instant state changes, no typewriter animation */
+  .nav,
+  .blackout-overlay,
+  .nav__logo,
+  .nav__link,
+  .mobile-nav__link {
+    transition: none;
+  }
+
+  /* Blackout animation - instant state toggle */
+  .nav--expanding,
+  .nav--blackout-complete {
+    transition: none;
+  }
+
+  /* When blackout is triggered, instantly show final state */
+  .blackout-active .blackout-overlay {
+    height: 100vh;
+  }
+}
+
+/* ==========================================================================
+   Focus Visibility (Keyboard Navigation)
+   ========================================================================== */
+
+/* Enhanced focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* Remove outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Ensure CTA buttons have visible focus */
+.cta:focus-visible,
+.submit-button:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* Form fields keep their custom focus styling */
+.form-field:focus-visible {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.03);
+}
+
+/* Skip link should have high visibility */
+.skip-link:focus-visible {
+  outline: 2px solid var(--color-bg);
+  outline-offset: 2px;
+}
+
+/* Service cards get visible focus when interactive */
+.service-card:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Navigation - Desktop
+   ========================================================================== */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  z-index: 1003;
+  transition: background-color var(--nav-transition-duration) var(--ease-out-quart);
+}
+
+/* Blackout overlay - paints from top of viewport, inverts everything via blend mode */
+/* White background + difference blend mode = inverts colors (white becomes black, black becomes white) */
+/* z-index 1004 = above nav (1003) so blend mode affects nav elements */
+.blackout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: var(--color-bg);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 1004;
+  will-change: height;
+}
+
+/* ==========================================================================
+   Blackout Animation States
+   ========================================================================== */
+
+/* Performance hints for animated properties */
+.nav {
+  will-change: transform;
+}
+
+/* Nav expanding state - during blackout scroll animation */
+/* Nav stays transparent - blackout overlay handles inversion via mix-blend-mode */
+.nav--expanding,
+.nav--blackout-complete {
+  /* No background change - nav floats above overlay */
+  /* Text/logo colors inverted automatically by overlay's mix-blend-mode: difference */
+}
+
+/* Note: Don't change body/html background for blackout - it conflicts with mix-blend-mode.
+   The overlay's mix-blend-mode: difference creates the inverted appearance. */
+
+/* Disable default scroll-based nav behavior during blackout */
+.nav--expanding.nav--scrolled,
+.nav--blackout-complete.nav--scrolled {
+  /* Override scrolled state - blackout takes precedence */
+}
+
+.nav__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+/* Logo */
+.nav__logo {
+  font-family: var(--font-family);
+  font-size: 18px;
+  font-weight: var(--font-weight-black);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--nav-transition-duration) var(--ease-out-quart);
+  /* Prevent layout shift during typewriter animation */
+  min-width: 120px;
+}
+
+.nav__logo-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Nav links */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-small);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav__link {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.5em 1em;
+  transition: color var(--nav-transition-duration) var(--ease-out-quart);
+  /* Crossfade technique for smooth weight transition */
+  position: relative;
+  display: inline-block;
+}
+
+/* Bold version overlaid - fades in on hover */
+.nav__link::after {
+  content: attr(data-text);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--duration-medium) var(--ease-subtle);
+  pointer-events: none;
+}
+
+.nav__link:hover::after {
+  opacity: 1;
+}
+
+/* Fade out regular text on hover */
+.nav__link:hover {
+  color: transparent;
+}
+
+/* Nav text color stays default (--color-text = black)
+   Blackout overlay inverts colors via mix-blend-mode when it covers the nav */
+
+/* ==========================================================================
+   Navigation - Mobile Bottom
+   ========================================================================== */
+
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height-mobile);
+  padding-bottom: env(safe-area-inset-bottom);
+  background-color: var(--color-text);
+  z-index: 1000;
+}
+
+.mobile-nav__logo {
+  font-family: var(--font-family);
+  font-size: 18px;
+  font-weight: var(--font-weight-black);
+  letter-spacing: -0.02em;
+  color: var(--color-bg);
+  text-decoration: none;
+  padding: 0 var(--container-padding);
+  display: flex;
+  align-items: center;
+  height: var(--nav-height-mobile);
+}
+
+.mobile-nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-small);
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--container-padding) 0 0;
+  height: var(--nav-height-mobile);
+}
+
+.mobile-nav__link {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-bg);
+  text-decoration: none;
+  padding: 0.5em 1em;
+  /* Crossfade technique for smooth weight transition */
+  position: relative;
+  display: inline-block;
+  transition: color var(--duration-medium) var(--ease-subtle);
+}
+
+/* Bold version overlaid - fades in on hover */
+.mobile-nav__link::after {
+  content: attr(data-text);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-bg);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--duration-medium) var(--ease-subtle);
+  pointer-events: none;
+}
+
+.mobile-nav__link:hover::after {
+  opacity: 1;
+}
+
+/* Fade out regular text on hover */
+.mobile-nav__link:hover {
+  color: transparent;
+}
+
+/* ==========================================================================
+   Navigation - Focus States
+   ========================================================================== */
+
+.nav__logo:focus-visible,
+.nav__link:focus-visible,
+.mobile-nav__logo:focus-visible,
+.mobile-nav__link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Navigation - Main Content Offset
+   ========================================================================== */
+
+/* Hero handles its own nav offset; other sections scroll naturally */
+
+/* ==========================================================================
+   Scrollytelling - About Section
+   Hybrid pin/flow scroll with frame sequence and text animations
+   ========================================================================== */
+
+/* About section container - hosts canvas and content */
+.section--about {
+  position: relative;
+  min-height: auto;
+  overflow: visible;
+}
+
+/* During pin, section becomes viewport height and stays fixed */
+.section--about.is-pinned {
+  min-height: 100vh;
+  /* JS sets: position: fixed; top: 25vh; etc. */
+  background: var(--color-background);
+  /* Create stacking context and cover full viewport */
+  isolation: isolate;
+}
+
+/* When pinned or after-pin, content should be at top, not vertically centered */
+.section--about.is-pinned .about-content,
+.section--about.is-after-pin .about-content {
+  justify-content: flex-start;
+  height: auto;
+}
+
+/* Full-screen backdrop when pinned to hide content scrolling behind */
+.section--about.is-pinned::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--color-background);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Spacer element maintains scroll distance while section is pinned */
+.about-scroll-spacer {
+  pointer-events: none;
+  background: var(--color-background);
+  /* Height set by JS based on CONFIG.pinning.scrollDistance */
+}
+
+/* Frame sequence canvas - renders behind text */
+.about-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  object-fit: contain;
+}
+
+/* During pin, canvas becomes fixed to viewport */
+.section--about.is-pinned .about-canvas {
+  position: fixed;
+  top: 0;
+}
+
+/* Content layer sits above canvas */
+.about-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Paragraph containers - GSAP controls visibility via autoAlpha */
+.scrollytelling-p {
+  /* Initial state set by GSAP - no CSS transition to avoid conflicts */
+}
+
+/* All paragraphs always visible - scroll controls animations, not visibility */
+.p1-content,
+.p2-content,
+.p3-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Semantic word wrappers - prepared for scroll-scrubbed animations */
+.semantic-word {
+  display: inline-block;
+  position: relative;
+  /* GPU acceleration for smooth transforms */
+  will-change: transform, opacity, filter;
+}
+
+/* Character spans created by text splitting */
+.semantic-word .char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* SVG elements for path/eliminate animations */
+.semantic-word svg {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Strikethrough line for eliminate effect */
+.semantic-word .strike-svg {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  transform: translateY(-50%);
+  overflow: visible;
+}
+
+/* Path underline for path effect */
+.semantic-word .path-svg {
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  overflow: visible;
+}
+
+/* Complexity wave container */
+.complexity-wave-container {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 60px;
+  margin-top: 10px;
+  pointer-events: none;
+}
+
+/* Individual character spans (created by splitText) - disabled */
+.semantic-word .char {
+  display: inline;
+}
+
+/* ==========================================================================
+   Text Animation Effects
+   ========================================================================== */
+
+/* 3D Flip - perspective container */
+[data-effect="flip3D"] {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Kinetic Scatter - allow overflow for scattered chars */
+[data-effect="kineticScatter"] {
+  overflow: visible;
+}
+
+/* Wave Motion - sine wave transform */
+[data-effect="waveMotion"] {
+  overflow: visible;
+}
+
+/* Glow Pulse - text shadow effect */
+[data-effect="glowPulse"] {
+  transition: text-shadow 0.8s var(--ease-out-quart);
+}
+
+[data-effect="glowPulse"].is-glowing {
+  text-shadow:
+    0 0 10px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(0, 0, 0, 0.2),
+    0 0 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Strikethrough - animated line */
+[data-effect="strikethrough"] {
+  position: relative;
+}
+
+[data-effect="strikethrough"]::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-text);
+  transform: translateY(-50%);
+  transition: width 0.6s var(--ease-out-quart);
+}
+
+[data-effect="strikethrough"].is-struck::after {
+  width: 100%;
+}
+
+/* SVG Draw - path underline */
+[data-effect="svgDraw"] {
+  position: relative;
+}
+
+[data-effect="svgDraw"] .path-underline {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  stroke: var(--color-text);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  transition: stroke-dashoffset 0.8s var(--ease-out-quart);
+}
+
+[data-effect="svgDraw"].is-drawn .path-underline {
+  stroke-dashoffset: 0;
+}
+
+/* Converge - multi-element convergence */
+[data-effect="converge"] {
+  transition: transform 0.6s var(--ease-out-quart);
+}
+
+/* ==========================================================================
+   Parallax Text Layers (high quality mode)
+   ========================================================================== */
+
+.parallax-text {
+  will-change: transform;
+}
+
+.parallax-text--slow {
+  /* Moves slower than scroll */
+}
+
+.parallax-text--fast {
+  /* Moves faster than scroll */
+}
+
+/* ==========================================================================
+   Scrollytelling Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .section--about {
+    /* Remove pin behavior */
+    min-height: auto !important;
+  }
+
+  .about-canvas {
+    /* Show static final frame */
+    position: absolute !important;
+    opacity: 0.1;
+  }
+
+  .scrollytelling-p {
+    /* Show all paragraphs */
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: none !important;
+  }
+
+  .semantic-word {
+    /* No character animations */
+    will-change: auto;
+  }
+
+  [data-effect="glowPulse"],
+  [data-effect="strikethrough"]::after,
+  [data-effect="svgDraw"] .path-underline {
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   Scrollytelling Mobile Adaptations
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .about-canvas {
+    /* Reduce opacity on mobile for readability */
+    opacity: 0.08;
+  }
+
+  .about-content {
+    /* Ensure text is readable on smaller screens */
+    padding: var(--space-element) 0;
+  }
+
+  /* Simplify text effects on mobile */
+  .semantic-word .char {
+    will-change: auto;
+  }
+}
+
+/* ==========================================================================
+   Sprite Shutter Animation - Hover-triggered frame sequence
+   "build" word shows brick sprite above on hover
+   ========================================================================== */
+
+/* Trigger wrapper - inline positioning */
+.sprite-hover-trigger {
+  position: relative;
+  display: inline;
+  cursor: default;
+}
+
+/* Sprite container - positioned ABOVE the word, centered */
+.sprite-hover-trigger__sprite {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  width: 52px;
+  height: 52px;
+  margin-bottom: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)),
+              transform 0.15s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1));
+  z-index: 10;
+}
+
+/* Sprite image element */
+.sprite-hover-trigger__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Hover state - sprite appears */
+.sprite-hover-trigger:hover .sprite-hover-trigger__sprite,
+.sprite-hover-trigger.is-animating .sprite-hover-trigger__sprite {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Animation complete state - stays visible at final frame */
+.sprite-hover-trigger.animation-complete .sprite-hover-trigger__sprite {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Position variant: below the word */
+.sprite-hover-trigger[data-position="below"] .sprite-hover-trigger__sprite {
+  bottom: auto;
+  top: 100%;
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
+/* Reduced motion - hide sprite entirely */
+@media (prefers-reduced-motion: reduce) {
+  .sprite-hover-trigger__sprite {
+    display: none !important;
+  }
+}
+
+/* Mobile/touch - disable hover sprite (touch doesn't have hover) */
+@media (hover: none), (pointer: coarse) {
+  .sprite-hover-trigger__sprite {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .section {
+    min-height: auto;
+    padding-top: var(--space-element);
+    padding-bottom: var(--space-element);
+  }
+
+  .section--hero {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: 0;
+  }
+
+  /* Hide desktop nav on mobile */
+  .nav {
+    display: none;
+  }
+
+  /* Show mobile bottom nav */
+  .mobile-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* No body padding - hero handles its own offset for bottom nav */
+}

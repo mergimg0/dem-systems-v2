@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DEM Systems - Bespoke software solutions that transform complexity into simplicity for creative agencies.">
+
+  <title>DEM Systems - Complexity to simplicity</title>
+
+  <!-- Preconnect to font CDN -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+
+  <!-- Preconnect to Cal.com for faster modal loading -->
+  <link rel="preconnect" href="https://app.cal.com" crossorigin>
+
+  <!-- Satoshi Font from Fontshare -->
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,900&display=swap" rel="stylesheet">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="DEM Systems - Complexity to simplicity">
+  <meta property="og:description" content="Bespoke software solutions that transform complexity into simplicity.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://demsystems.com">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="DEM Systems - Complexity to simplicity">
+  <meta name="twitter:description" content="Bespoke software solutions that transform complexity into simplicity.">
+
+  <!-- Favicon placeholder -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>D</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- Reduced motion check -->
+  <script>
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('reduced-motion');
+    }
+  </script>
+</head>
+<body>
+  <!-- SVG Filter Definitions for Semantic Animations -->
+  <svg class="sr-only" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
+    <defs>
+      <!-- Friction filter: feTurbulence + feDisplacementMap = visual noise + distortion -->
+      <filter id="friction-filter" x="-50%" y="-50%" width="200%" height="200%">
+        <feTurbulence id="friction-turbulence" type="turbulence" baseFrequency="0.02" numOctaves="2" result="noise"/>
+        <feDisplacementMap id="friction-displacement" in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <!-- Clarity filter: Gaussian blur that clears to sharp -->
+      <filter id="clarity-filter" x="-10%" y="-10%" width="120%" height="120%">
+        <feGaussianBlur id="clarity-blur" in="SourceGraphic" stdDeviation="3"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Loading Progress Bar -->
+  <div class="loading-bar" aria-hidden="true"></div>
+
+  <!-- Skip Link for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Desktop Navigation -->
+  <header class="nav">
+    <nav class="nav__container" aria-label="Main navigation">
+      <a href="#" class="nav__logo" aria-label="DEM Systems - Back to top">
+        <span class="nav__logo-text">DEM Systems</span>
+      </a>
+      <ul class="nav__links">
+        <li><a href="#about" class="nav__link" data-text="About">About</a></li>
+        <li><a href="#contact" class="nav__link" data-text="Contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <!-- Blackout overlay - paints from top of viewport, inverts everything via blend mode -->
+  <div class="blackout-overlay" aria-hidden="true"></div>
+
+  <!-- WebGL Thread Canvas (disabled until rope finessed) -->
+  <!-- <canvas id="thread-canvas" aria-hidden="true"></canvas> -->
+
+  <!-- Main Content -->
+  <main id="main-content">
+
+    <!-- Hero Section -->
+    <section class="section section--hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-title-wrapper">
+          <h1 id="hero-title" class="hero-title hero-reveal">DEM Systems</h1>
+        </div>
+        <p class="hero-tagline hero-reveal hero-reveal--delayed">
+          <span class="typewriter">
+            <span class="typewriter__text"></span>
+            <span class="typewriter__cursor typewriter__cursor--blink">|</span>
+          </span>
+        </p>
+      </div>
+      <div class="scroll-indicator" aria-hidden="true">
+        <span class="scroll-indicator__text">Scroll</span>
+      </div>
+    </section>
+
+    <!-- About Section - Scrollytelling -->
+    <section id="about" class="section section--about" aria-labelledby="about-title">
+      <!-- Frame sequence canvas (renders behind text) -->
+      <canvas id="about-canvas" class="about-canvas" aria-hidden="true"></canvas>
+
+      <div class="container about-content">
+        <h2 id="about-title" class="sr-only">About</h2>
+        <div class="body-text">
+          <!-- P1: The Pain Point -->
+          <p class="p1-content scrollytelling-p" data-paragraph="1">
+            We <span class="sprite-hover-trigger" data-sprite="bricks">build</span> <span class="semantic-word" data-effect="flip3D">bespoke</span> software solutions
+            that eliminate the <span class="semantic-word" data-effect="kineticScatter">friction</span> points
+            <span class="sprite-hover-trigger" data-sprite="gears">grinding</span> your business to a halt.
+          </p>
+
+          <!-- P2: The Promise -->
+          <p class="p2-content scrollytelling-p about-p2" data-paragraph="2">
+            <span class="semantic-word" data-effect="strikethrough">No complicated <span class="sprite-hover-trigger" data-sprite="skulls">jargon</span>. No endless calls.</span>
+            Just the <span class="semantic-word" data-effect="svgDraw">path</span> of least resistance
+            between where you are and where <span class="sprite-hover-trigger" data-sprite="desks" data-position="below">operational</span>
+            <span class="sprite-hover-trigger" data-sprite="clarity" data-position="below"><span class="semantic-word" data-effect="glowPulse">clarity</span></span> lives.
+          </p>
+
+          <!-- P3: The Outcome -->
+          <p class="p3-content scrollytelling-p" data-paragraph="3">
+            We handle the <span class="sprite-hover-trigger" data-sprite="wires" data-position="below"><span class="semantic-word" data-effect="waveMotion">complex code</span></span>
+            so you can <span class="semantic-word" data-effect="converge">focus</span> on the work that
+            <span class="semantic-word" data-effect="converge">matters</span>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section section--contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="contact-content" data-reveal>
+          <h2 id="contact-title" class="section-title">Book a conversation</h2>
+          <p class="contact-subtext">No commitment. Just a conversation about what's possible.</p>
+
+          <button class="cta"
+                  data-cal-namespace="booking"
+                  data-cal-link="ollie-roberts-ufdwdy/30min"
+                  data-cal-config='{"layout":"month_view"}'
+                  aria-label="Schedule a call via Cal.com">
+            Schedule a call
+          </button>
+
+          <!-- Email fallback -->
+          <p class="contact-email">
+            Or email <a href="mailto:hello@demsystems.com">hello@demsystems.com</a>
+          </p>
+        </div>
+
+        <!-- Contact Form (alternative to Calendly - uncomment to enable)
+        <div class="form-container" data-reveal>
+          <form id="contact-form" novalidate>
+            <div class="form-fields">
+              <div class="field-wrapper">
+                <input
+                  type="text"
+                  name="name"
+                  class="form-field"
+                  placeholder="Your name"
+                  required
+                  aria-label="Your name"
+                >
+                <p class="field-error-message" aria-live="polite"></p>
+              </div>
+
+              <div class="field-wrapper">
+                <input
+                  type="email"
+                  name="email"
+                  class="form-field"
+                  placeholder="your@email.com"
+                  required
+                  aria-label="Email address"
+                >
+                <p class="field-error-message" aria-live="polite"></p>
+              </div>
+
+              <div class="field-wrapper">
+                <textarea
+                  name="message"
+                  class="form-field"
+                  placeholder="Tell us about your project"
+                  rows="4"
+                  required
+                  aria-label="Message"
+                ></textarea>
+                <p class="field-error-message" aria-live="polite"></p>
+              </div>
+
+              <button type="submit" class="submit-button">
+                <span class="button-text">Send message</span>
+                <span class="button-loader" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="success-message" aria-live="polite">
+              <h3>Thank you</h3>
+              <p>We'll be in touch within 24 hours.</p>
+            </div>
+          </form>
+        </div>
+        -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="container footer">
+    <p class="small-text">&copy; 2025 DEM Systems</p>
+    <button class="motion-toggle" aria-pressed="true" aria-label="Toggle animations">
+      <span class="motion-toggle__label">Animations</span>
+      <span class="motion-toggle__status">On</span>
+    </button>
+  </footer>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="#" class="mobile-nav__logo" aria-label="Back to top">DEM</a>
+    <ul class="mobile-nav__links">
+      <li><a href="#about" class="mobile-nav__link" data-text="About">About</a></li>
+      <li><a href="#contact" class="mobile-nav__link" data-text="Contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Three.js and Anime.js -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+        "animejs": "https://cdn.jsdelivr.net/npm/animejs@4.0.0-beta.100/+esm"
+      }
+    }
+  </script>
+
+  <!-- Application Scripts -->
+  <!-- <script type="module" src="js/thread.js"></script> --> <!-- Rope disabled temporarily -->
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/hero-video-reveal.js"></script>
+  <script type="module" src="js/blackout.js"></script>
+  <script type="module" src="js/nav.js"></script>
+  <script type="module" src="js/form.js"></script>
+  <script type="module" src="js/typewriter.js"></script>
+  <!-- About section scroll-scrubbed animations -->
+  <script type="module" src="js/about-animations.js"></script>
+  <!-- Sprite hover animation for "build" word -->
+  <script type="module" src="js/sprite-hover.js"></script>
+  <!-- Old animation scripts (replaced by about-animations.js) -->
+  <!-- <script type="module" src="js/phrase-shift.js"></script> -->
+  <!-- <script type="module" src="js/semantic-animations.js"></script> -->
+  <!-- <script type="module" src="js/scrollytelling.js"></script> -->
+
+  <!-- Custom Cursor (Optional Enhancement)
+       Small morphing dot that indicates interactive elements.
+       Test with users - if it feels gimmicky, keep native cursors. -->
+  <script type="module">
+    import { initCustomCursor } from './js/cursor.js';
+    initCustomCursor();
+  </script>
+
+  <!-- Cal.com Embed Script for Booking Modal -->
+  <script>
+    (function (C, A, L) {
+      let p = function (a, ar) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement('script')).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === 'string') {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ['initNamespace', namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, 'https://app.cal.com/embed/embed.js', 'init');
+
+    Cal('init', 'booking', { origin: 'https://cal.com' });
+    Cal.ns.booking('ui', {
+      styles: { branding: { brandColor: '#000000' } },
+      hideEventTypeDetails: false,
+      layout: 'month_view'
+    });
+  </script>
+</body>
+</html>
