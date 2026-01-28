@@ -24,12 +24,27 @@ let svg = null;
 let cursor = null;
 let isActive = false;
 let isCaptured = false;
+let isScrollTriggered = false;  // Track if capture was from scroll (not hover)
+let userHasMovedMouse = false;  // Track if user moved mouse since scroll trigger
 let drawAnim = null;
 let closeAnim = null;
 let mouseX = 0;
 let mouseY = 0;
 let animationId = null;
 let isInitialized = false;
+
+/**
+ * Check if hero has been scrolled past the trigger threshold (30%).
+ * Returns false when user is in 0-30% hero scroll range,
+ * preventing hover-based magnetic capture from overlapping hero content.
+ */
+function isScrollPastHeroThreshold() {
+  const hero = document.querySelector('.section--hero');
+  if (!hero) return false;
+  const r = hero.getBoundingClientRect();
+  const progress = -r.top / r.height;
+  return progress >= 0.30;
+}
 
 /**
  * Get the center point of the period trigger
@@ -125,6 +140,8 @@ function closeRectangle() {
   if (!isActive) return;
   isActive = false;
   isCaptured = false;
+  isScrollTriggered = false;
+  userHasMovedMouse = false;
 
   // Resume wiggle animation
   if (periodTrigger) {
@@ -164,7 +181,20 @@ function magnetLoop() {
   const center = getPeriodCenter();
   const dist = distance(mouseX, mouseY, center.x, center.y);
 
-  if (dist < CONFIG.captureRadius) {
+  // Handle scroll-triggered capture: scroll handler owns the lifecycle.
+  // magnetLoop must NOT escape/close — only the scroll handler resets via resetCapture().
+  if (isScrollTriggered && isCaptured) {
+    // Keep cursor locked to period (follows it as typewriter animates)
+    cursor.style.transform = `translate(calc(${center.x}px - 50%), calc(${center.y}px - 50%))`;
+
+    animationId = requestAnimationFrame(magnetLoop);
+    return;
+  }
+
+  // Normal hover-based behavior — only allowed after 30% hero scroll
+  const scrollReady = isScrollPastHeroThreshold();
+
+  if (dist < CONFIG.captureRadius && scrollReady) {
     // Fully captured - snap cursor to period
     if (!isCaptured) {
       isCaptured = true;
@@ -173,7 +203,7 @@ function magnetLoop() {
     // Position cursor exactly on the period
     cursor.style.transform = `translate(calc(${center.x}px - 50%), calc(${center.y}px - 50%))`;
 
-  } else if (dist < CONFIG.magnetRadius) {
+  } else if (dist < CONFIG.magnetRadius && scrollReady) {
     // Magnetic pull zone - interpolate cursor position
     const normalizedDist = dist / CONFIG.magnetRadius;
     const pull = easeInOutCubic(1 - normalizedDist) * CONFIG.suckStrength;
@@ -202,6 +232,13 @@ function magnetLoop() {
  * Track mouse position
  */
 function handleMouseMove(e) {
+  // Detect user mouse movement when scroll-triggered
+  if (isScrollTriggered && !userHasMovedMouse) {
+    const moved = Math.abs(e.clientX - mouseX) > 5 || Math.abs(e.clientY - mouseY) > 5;
+    if (moved) {
+      userHasMovedMouse = true;
+    }
+  }
   mouseX = e.clientX;
   mouseY = e.clientY;
 }
@@ -286,6 +323,57 @@ export function destroyMagneticCursor() {
 }
 
 /**
+ * Programmatic trigger for scroll-based activation
+ * Animates cursor to period and triggers capture
+ * @returns {boolean} Whether trigger was successful
+ */
+export function triggerCapture() {
+  if (isCaptured || !periodTrigger) return false;
+
+  const center = getPeriodCenter();
+
+  // Mark as scroll-triggered so magnetLoop handles it specially
+  isScrollTriggered = true;
+  userHasMovedMouse = false;
+
+  // Animate cursor to period position with spring easing
+  if (cursor) {
+    cursor.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    cursor.style.transform = `translate(calc(${center.x}px - 50%), calc(${center.y}px - 50%))`;
+
+    // Remove transition after animation completes
+    setTimeout(() => {
+      cursor.style.transition = '';
+    }, 400);
+  }
+
+  // Set captured state and trigger animation
+  isCaptured = true;
+  drawRectangle();
+
+  return true;
+}
+
+/**
+ * Check if magnetic cursor has been triggered
+ * @returns {boolean} Whether cursor is captured
+ */
+export function isTriggered() {
+  return isCaptured;
+}
+
+/**
+ * Reset capture state — called by scroll handler when scrolling back above 30%.
+ * This is the ONLY way to close a scroll-triggered capture.
+ */
+export function resetCapture() {
+  if (!isCaptured && !isActive) return;
+  isScrollTriggered = false;
+  userHasMovedMouse = false;
+  closeRectangle();
+}
+
+/**
  * Debug function - exposed globally for testing
  */
 window.testPeriodMagnet = () => {
@@ -300,5 +388,8 @@ window.testPeriodMagnet = () => {
 
 export default {
   initMagneticCursor,
-  destroyMagneticCursor
+  destroyMagneticCursor,
+  triggerCapture,
+  isTriggered,
+  resetCapture
 };

@@ -51,8 +51,12 @@ export function initHeroVideoReveal(options = {}) {
     return null;
   }
 
+  // Constrain canvas to title wrapper instead of full hero
+  const titleWrapper = heroSection.querySelector('.hero-title-wrapper');
+  const canvasParent = titleWrapper || heroSection;
+
   // Create mouse tracker
-  const mouseReveal = new MouseReveal(heroSection, {
+  const mouseReveal = new MouseReveal(canvasParent, {
     lerpFactor,
     enabled: true,
     supportTouch: false // Desktop only for video reveal
@@ -69,13 +73,13 @@ export function initHeroVideoReveal(options = {}) {
     scaleMode: 'cover'
   });
 
-  // Add canvas to hero section
+  // Add canvas to title wrapper (behind text content)
   const canvas = videoCanvas.getCanvas();
-  heroSection.appendChild(canvas);
+  canvasParent.prepend(canvas);
 
   // Initial resize
   function handleResize() {
-    const rect = heroSection.getBoundingClientRect();
+    const rect = canvasParent.getBoundingClientRect();
     videoCanvas.resize(rect.width, rect.height);
   }
   handleResize();
@@ -128,6 +132,30 @@ export function initHeroVideoReveal(options = {}) {
     }
   };
 }
+
+/**
+ * Fade out the video reveal gracefully
+ * Called by scroll trigger when magnetic cursor activates
+ */
+export function fadeOutVideoReveal() {
+  const instance = window.__heroVideoReveal;
+  if (!instance) return;
+
+  const canvas = document.querySelector('.video-reveal-canvas');
+  if (canvas) {
+    canvas.style.transition = 'opacity 0.5s ease-out';
+    canvas.style.opacity = '0';
+
+    // Destroy after fade completes
+    setTimeout(() => {
+      instance.destroy();
+      window.__heroVideoReveal = null;
+    }, 500);
+  }
+}
+
+// Expose globally for scroll trigger
+window.fadeOutVideoReveal = fadeOutVideoReveal;
 
 // Auto-initialize when DOM is ready (can be disabled via data attribute)
 document.addEventListener('DOMContentLoaded', () => {

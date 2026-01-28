@@ -8,19 +8,40 @@
    ========================================================================== */
 
 :root {
-  /* Colors - Pure Monochrome */
+  /* Colors - Expanded Monochrome Palette */
   --color-bg: #ffffff;
-  --color-text: #000000;
-  --color-text-muted: #666666;
+  --color-bg-subtle: #fafafa;          /* Alternating sections */
+  --color-bg-elevated: #f5f5f5;        /* Cards, modals */
+
+  --color-text: #0a0a0a;               /* Slightly off-black (warmth) */
+  --color-text-secondary: #4a4a4a;     /* Subheadings, metadata */
+  --color-text-muted: #717171;         /* Captions, placeholders */
+  --color-text-subtle: #9a9a9a;        /* Disabled, hints */
+
+  --color-border: rgba(0, 0, 0, 0.08); /* Subtle borders */
+  --color-border-strong: rgba(0, 0, 0, 0.15); /* Visible borders */
 
   /* Typography Scale - Satoshi */
   --font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Font sizes - fluid typography */
-  --font-size-hero: clamp(48px, 8vw, 96px);
-  --font-size-section: clamp(24px, 4vw, 36px);
-  --font-size-body: clamp(16px, 1.5vw, 21px);
-  --font-size-small: 14px;
+  /* Font sizes - Major Third Scale (1.25 ratio) */
+  --font-size-display: clamp(64px, 10vw, 128px);   /* Display/hero title */
+  --font-size-hero: clamp(48px, 8vw, 96px);        /* Secondary hero */
+  --font-size-h1: clamp(32px, 5vw, 56px);          /* Page headings */
+  --font-size-h2: clamp(26px, 4vw, 42px);          /* Section headings */
+  --font-size-section: clamp(24px, 4vw, 36px);     /* Legacy alias */
+  --font-size-h3: clamp(21px, 3vw, 32px);          /* Subsections */
+  --font-size-lead: clamp(18px, 2vw, 24px);        /* Lead paragraphs */
+  --font-size-body: clamp(16px, 1.5vw, 19px);      /* Body text */
+  --font-size-small: clamp(13px, 1.2vw, 15px);     /* Captions, metadata */
+  --font-size-micro: 12px;                          /* Labels, tags */
+
+  /* Letter spacing - purpose-driven */
+  --letter-spacing-display: -0.03em;    /* Tight for large display text */
+  --letter-spacing-heading: -0.02em;    /* Slightly tight for headings */
+  --letter-spacing-body: 0;             /* Normal for body text */
+  --letter-spacing-caps: 0.08em;        /* Loose for uppercase text */
+  --letter-spacing-small: 0.02em;       /* Slightly loose for readability */
 
   /* Font weights */
   --font-weight-regular: 400;
@@ -39,10 +60,10 @@
   --space-small: clamp(16px, 2vh, 24px);
 
   /* Container */
-  --container-padding: clamp(24px, 8vw, 160px);
-  --container-max-width: 1200px;
+  --container-padding: clamp(24px, 6vw, 120px);
+  --container-max-width: 1400px;
 
-  /* Transitions */
+  /* Transitions - Legacy */
   --ease-out-quart: cubic-bezier(0.215, 0.61, 0.355, 1);
   --duration-fast: 0.2s;
   --duration-medium: 0.4s;
@@ -54,6 +75,25 @@
   --duration-micro: 100ms;  /* Hover states, micro-feedback */
   --duration-base: 150ms;   /* State changes */
   --duration-reveal: 200ms; /* Reveals, transitions */
+
+  /* Unified Animation Timing System */
+  --duration-instant: 100ms;     /* Cursor, press feedback */
+  --duration-quick: 200ms;       /* Hover states, micro-interactions */
+  --duration-standard: 350ms;    /* State changes, reveals */
+  --duration-emphasis: 500ms;    /* Page transitions, modals */
+  --duration-dramatic: 800ms;    /* Special effects, kinetic type */
+  --duration-kinetic: 2500ms;    /* Kinetic typography loops */
+
+  /* Easing functions - unified system */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);       /* Default out */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);         /* Snappy out */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);            /* Smooth in-out */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);       /* Bouncy */
+
+  /* Transition presets */
+  --transition-hover: var(--duration-quick) var(--ease-out);
+  --transition-reveal: var(--duration-standard) var(--ease-out-expo);
+  --transition-emphasis: var(--duration-emphasis) var(--ease-spring);
 
   /* Navigation */
   --nav-height: 72px;
@@ -87,7 +127,7 @@ body {
   font-size: var(--font-size-hero);
   font-weight: var(--font-weight-black);
   line-height: var(--line-height-heading);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.05em;
 }
 
 .hero-tagline {
@@ -99,6 +139,15 @@ body {
   margin-top: var(--space-small);
   /* Fixed height prevents layout shift during typewriter animation */
   min-height: calc(var(--font-size-section) * var(--line-height-heading));
+}
+
+/* Secondary tagline (typewriter) - smaller, more muted */
+.hero-tagline--secondary {
+  font-size: var(--font-size-lead);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+  margin-top: var(--space-small);
+  min-height: calc(var(--font-size-lead) * var(--line-height-heading));
 }
 
 /* ==========================================================================
@@ -137,6 +186,83 @@ body {
 }
 
 /* ==========================================================================
+   Kinetic Typography (Holke79-inspired)
+   Baseline animation with syllabic rhythm variation
+   ========================================================================== */
+
+/* Kinetic tagline variant */
+.hero-tagline--kinetic {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-heading);
+}
+
+/* Individual word wrapper */
+.kinetic-word {
+  display: inline-block;
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+/* Animation active state */
+.kinetic-active .kinetic-word {
+  animation: kinetic-bounce var(--duration-kinetic) ease-in-out infinite;
+  animation-delay: calc(var(--word-index) * 0.12s);
+}
+
+/* Vary rhythm based on syllable count */
+.kinetic-active .kinetic-word[data-syllables="1"] {
+  animation-duration: 2s;
+}
+
+.kinetic-active .kinetic-word[data-syllables="2"] {
+  animation-duration: 2.2s;
+}
+
+.kinetic-active .kinetic-word[data-syllables="3"] {
+  animation-duration: 2.5s;
+}
+
+.kinetic-active .kinetic-word[data-syllables="4"] {
+  animation-duration: 2.8s;
+}
+
+/* Baseline bounce animation - subtle, playful */
+@keyframes kinetic-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  15% {
+    transform: translateY(-0.08em);
+  }
+  30% {
+    transform: translateY(0.04em);
+  }
+  45% {
+    transform: translateY(-0.04em);
+  }
+  60% {
+    transform: translateY(0.02em);
+  }
+  75% {
+    transform: translateY(-0.02em);
+  }
+  90% {
+    transform: translateY(0.01em);
+  }
+}
+
+/* Reduced motion: disable kinetic effect */
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-active .kinetic-word {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
    Hero Video Reveal Effect
    ========================================================================== */
 
@@ -145,10 +271,13 @@ body {
   display: inline-block;
 }
 
-/* When wrapper contains video text, expand to full width */
-.hero-title-wrapper:has(.hero-video-text-container) {
+/* When wrapper contains video text or emergence, expand to full width */
+.hero-title-wrapper:has(.hero-video-text-container),
+.hero-title-wrapper:has(.hero-emergence-container) {
   display: block;
   width: 100%;
+  padding: 2rem 0 0.75rem;  /* Top breathing room, tight bottom to avoid typewriter overlap */
+  margin: -2rem 0 -0.75rem; /* Cancel layout shift from padding */
 }
 
 /* Video reveal canvas - positioned behind hero content */
@@ -159,6 +288,8 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 80%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 15%, black 80%, transparent);
 }
 
 /* ==========================================================================
@@ -216,6 +347,160 @@ body {
   z-index: 1;
 }
 
+/* ==========================================================================
+   Hero Text Emergence Animation
+   ========================================================================== */
+
+.hero-emergence-container {
+  position: relative;
+  width: 100%;
+  min-height: clamp(60px, 10vw, 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emergence-canvas {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Shape base styles - optimized for high-density letterforms */
+.emergence-shape {
+  position: absolute;
+  will-change: transform, opacity;
+  pointer-events: none;
+  backface-visibility: hidden;
+  transform-origin: center center;
+  /* Subtle blur during formation for blending */
+  filter: blur(0.3px);
+  transition: filter 0.3s ease-out;
+}
+
+/* Sharpen shapes when formation complete */
+.emergence-complete .emergence-shape {
+  filter: blur(0);
+}
+
+/* Shape type variants - smaller sizes for density */
+.emergence-shape--circle {
+  border-radius: 50%;
+}
+
+.emergence-shape--square {
+  border-radius: 1px;
+}
+
+.emergence-shape--line {
+  height: 2px !important;
+  border-radius: 1px;
+}
+
+.emergence-shape--blob {
+  border-radius: 40% 60% 50% 50%;
+}
+
+/* Letter groups for hover targeting */
+.letter-group {
+  position: absolute;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.letter-group:hover .emergence-shape {
+  /* Hover state handled by JS for dissolve effect */
+}
+
+/* Fallback title styling during emergence */
+.hero-emergence-container + .hero-title--fallback,
+.hero-emergence-container ~ .hero-title--fallback {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Show fallback for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .emergence-canvas {
+    display: none !important;
+  }
+
+  .hero-emergence-container + .hero-title--fallback,
+  .hero-emergence-container ~ .hero-title--fallback {
+    position: relative;
+    opacity: 1 !important;
+    pointer-events: auto;
+  }
+
+  .hero-emergence-container {
+    display: none;
+  }
+}
+
+/* Reduced motion class (JS-applied) */
+.reduced-motion .emergence-canvas {
+  display: none !important;
+}
+
+.reduced-motion .hero-emergence-container + .hero-title--fallback,
+.reduced-motion .hero-emergence-container ~ .hero-title--fallback {
+  position: relative;
+  opacity: 1 !important;
+  pointer-events: auto;
+}
+
+/* No-JS fallback */
+.no-js .emergence-canvas {
+  display: none;
+}
+
+.no-js .hero-emergence-container + .hero-title--fallback {
+  position: relative;
+  opacity: 1;
+}
+
+/* Animation complete state */
+.emergence-complete .letter-group {
+  pointer-events: auto;
+}
+
+/* When emergence completes, shapes ARE the text - keep fallback hidden */
+.emergence-complete + .hero-title--fallback,
+.emergence-complete ~ .hero-title--fallback {
+  /* Keep hidden - shapes form readable text now */
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Keep shapes fully visible when complete - they ARE the letterforms */
+.emergence-complete .emergence-canvas {
+  /* Shapes remain as the permanent text representation */
+  opacity: 1;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .emergence-shape {
+    /* Reduce complexity on mobile */
+    will-change: auto;
+  }
+
+  .hero-emergence-container {
+    min-height: clamp(40px, 8vw, 80px);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .emergence-shape {
+    /* Increase contrast for visibility */
+    filter: contrast(1.2);
+  }
+}
+
 .section-title {
   font-size: var(--font-size-section);
   font-weight: var(--font-weight-bold);
@@ -224,10 +509,10 @@ body {
 }
 
 .body-text {
-  font-size: clamp(18px, 2vw, 26px);
+  font-size: clamp(20px, 2.5vw, 32px);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
-  max-width: 60ch;
+  max-width: 70ch;
 }
 
 .body-text p + p {
@@ -259,19 +544,59 @@ body {
 }
 
 /* Footer - same stacking context as main content for blend overlay */
-footer.container {
+.footer {
   position: relative;
   z-index: 1001;
-  padding-bottom: var(--space-element);
+  padding: 0 0 var(--space-element);
 }
 
-/* Footer layout with motion toggle */
-.footer {
+.footer__link {
+  font-size: var(--font-size-small);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--duration-base) var(--ease-subtle);
+}
+
+.footer__link:hover {
+  color: var(--color-text-muted);
+}
+
+/* Footer Bottom Row - Copyright + Legal + Toggle */
+.footer__bottom {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: var(--space-element);
+  padding-top: var(--space-element);
   flex-wrap: wrap;
-  gap: var(--space-small);
+}
+
+.footer__copyright {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.footer__legal {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+.footer__bottom .motion-toggle {
+  margin-left: auto;
+}
+
+/* Footer Responsive */
+@media (max-width: 600px) {
+  .footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-small);
+  }
+
+  .footer__bottom .motion-toggle {
+    margin-left: 0;
+  }
 }
 
 /* Motion Toggle Button */
@@ -351,10 +676,21 @@ footer.container {
   min-height: auto;
 }
 
-/* Extra breathing room before contact - About should nearly disappear first */
+/* Contact follows shortly after About */
 .section--contact {
-  margin-top: 50vh;
-  padding-bottom: 35vh; /* Allow scrolling contact up but not too high */
+  margin-top: -10vh;
+  padding-bottom: 20vh; /* Center contact content when fully scrolled */
+}
+
+/* Subtle section separator - top border on contact */
+.section--contact::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--container-padding);
+  right: var(--container-padding);
+  height: 1px;
+  background: var(--color-border);
 }
 
 /* ==========================================================================
@@ -1748,6 +2084,22 @@ input, textarea {
   transition: background-color var(--nav-transition-duration) var(--ease-out-quart);
 }
 
+/* Subtle bottom border that animates in from left on scroll */
+.nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-border);
+  transition: width 0.4s var(--ease-out-expo);
+}
+
+.nav--scrolled::after {
+  width: 100%;
+}
+
 /* Blackout overlay - paints from top of viewport, inverts everything via blend mode */
 /* White background + difference blend mode = inverts colors (white becomes black, black becomes white) */
 /* z-index 1004 = above nav (1003) so blend mode affects nav elements */
@@ -1803,6 +2155,7 @@ input, textarea {
 
 /* Logo */
 .nav__logo {
+  position: relative;
   font-family: var(--font-family);
   font-size: 18px;
   font-weight: var(--font-weight-black);
@@ -1979,6 +2332,7 @@ input, textarea {
   position: relative;
   min-height: auto;
   overflow: visible;
+  margin-top: -35vh; /* Pull up into hero viewport so it appears earlier */
 }
 
 /* During pin, section becomes viewport height and stays fixed */
@@ -2388,18 +2742,14 @@ input, textarea {
 /* Metamorphosis Canvas */
 #metamorphosis-canvas {
   position: fixed;
-  left: 40px;
-  top: 35%;
-  width: calc(100% - 80px);
-  height: 55%;
+  left: 0;
+  top: 15%;
+  width: 100%;
+  height: 50%;
   pointer-events: none;
   z-index: 9997;
   opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-#metamorphosis-canvas.active {
-  opacity: 1;
+  transition: opacity 0.15s ease-out;
 }
 
 /* Reduced motion - disable magnetic cursor animations */
@@ -2425,6 +2775,99 @@ input, textarea {
   #metamorphosis-canvas {
     display: none !important;
   }
+}
+
+/* ==========================================================================
+   Contact Section Animations
+   ========================================================================== */
+
+.contact-char {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* (cta__text removed — no longer wrapping button text) */
+
+/* ==========================================================================
+   Contact Section — Scroll-Wipe Reveal
+   Geometric wipe: content clips from hidden to visible as it scrolls in
+   ========================================================================== */
+
+@property --contact-wipe {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+.contact-wipe {
+  --contact-wipe: 100%;
+  clip-path: inset(var(--contact-wipe) 0 0 0);
+  will-change: clip-path;
+}
+
+.contact-wipe.wipe-revealed {
+  --contact-wipe: 0%;
+  clip-path: none;
+  will-change: auto;
+}
+
+/* ==========================================================================
+   About Section — Scroll-Wipe Reveal (top-to-bottom)
+   Geometric wipe: paragraphs clip from hidden to visible, top-down
+   ========================================================================== */
+
+@property --about-wipe {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+.about-wipe {
+  --about-wipe: 100%;
+  clip-path: inset(0 0 var(--about-wipe) 0);
+  will-change: clip-path;
+}
+
+.about-wipe.wipe-revealed {
+  --about-wipe: 0%;
+  clip-path: none;
+  will-change: auto;
+}
+
+/* ==========================================================================
+   Logo Proximity Sprite Animation
+   ========================================================================== */
+
+.logo-sprite {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(circle, black 30%, transparent 70%);
+  mask-image: radial-gradient(circle, black 30%, transparent 70%);
+}
+
+.nav__logo-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* Active state — toggled by JS on proximity */
+.nav__logo.logo-proximity .logo-sprite {
+  opacity: 0.25;
+}
+
+/* On direct hover — hide sprite, let cursor behavior dominate */
+.nav__logo:hover .logo-sprite {
+  opacity: 0;
 }
 
 /* ==========================================================================

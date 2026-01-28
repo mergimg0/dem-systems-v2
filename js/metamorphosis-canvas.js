@@ -35,6 +35,8 @@ let ctx = null;
 let particles = [];
 let centerX = 0;
 let centerY = 0;
+let cssWidth = 0;   // CSS dimensions (not multiplied by DPR)
+let cssHeight = 0;
 let mainTimeline = null;
 let flowLoop = null;
 let isRunning = false;
@@ -69,8 +71,8 @@ function mulberry32(seed) {
  */
 function initParticles() {
   const random = mulberry32(12345);
-  const w = canvas.width;
-  const h = canvas.height;
+  const w = cssWidth;
+  const h = cssHeight;
   centerX = w / 2;
   centerY = h / 2;
 
@@ -116,7 +118,7 @@ function initHarmonics() {
  * Compute wave Y position with harmonics
  */
 function computeWaveY(x, filter) {
-  const baseFreq = (CONFIG.baseCycles * 2 * Math.PI) / canvas.width;
+  const baseFreq = (CONFIG.baseCycles * 2 * Math.PI) / cssWidth;
   let y = centerY + CONFIG.baseAmplitude * Math.sin(baseFreq * x);
 
   for (const h of harmonics) {
@@ -133,7 +135,7 @@ function computeWaveY(x, filter) {
  * Render dots (phases: start, chaos, order, converge)
  */
 function renderDots() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
   ctx.beginPath();
   ctx.fillStyle = CONFIG.dotColor;
   ctx.globalAlpha = state.dotOpacity;
@@ -154,7 +156,7 @@ function renderDots() {
  * Render expanding wave (phases: wave, filter)
  */
 function renderWave() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
 
   const extent = state.waveExpand;
   if (extent <= 0) {
@@ -166,7 +168,7 @@ function renderWave() {
     return;
   }
 
-  const maxExt = canvas.width / 2;
+  const maxExt = cssWidth / 2;
   const currExt = extent * maxExt;
   const leftX = centerX - currExt;
   const rightX = centerX + currExt;
@@ -198,7 +200,7 @@ function renderWave() {
  * Render wave split (phase: split)
  */
 function renderSplit() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
 
   const progress = state.splitProgress;
   const flowSpacing = 50;
@@ -207,7 +209,7 @@ function renderSplit() {
     // Wave contracting back to center
     const contractProgress = progress * 2;
     const extent = 1 - contractProgress;
-    const maxExt = canvas.width / 2;
+    const maxExt = cssWidth / 2;
     const currExt = Math.max(1, extent * maxExt);
     const leftX = centerX - currExt;
     const rightX = centerX + currExt;
@@ -250,15 +252,15 @@ function renderSplit() {
  * Render flowing lines (phase: flow)
  */
 function renderFlow() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
 
   const stretch = state.flowStretch;
   const flowSpacing = 50;
 
   if (stretch < 1) {
     // Dots stretching into lines
-    const lineEndX = centerX + (canvas.width / 2) * stretch;
-    const lineStartX = centerX - (canvas.width / 2) * stretch;
+    const lineEndX = centerX + (cssWidth / 2) * stretch;
+    const lineStartX = centerX - (cssWidth / 2) * stretch;
 
     ctx.strokeStyle = CONFIG.dotColor;
     ctx.lineWidth = 2;
@@ -270,7 +272,7 @@ function renderFlow() {
 
       ctx.beginPath();
       for (let x = lineStartX; x <= lineEndX; x += 3) {
-        const y = baseY + 20 * Math.sin((3 * 2 * Math.PI * x) / canvas.width);
+        const y = baseY + 20 * Math.sin((3 * 2 * Math.PI * x) / cssWidth);
         if (x === lineStartX) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
@@ -279,8 +281,8 @@ function renderFlow() {
       // End dots (shrinking as stretch increases)
       ctx.beginPath();
       ctx.fillStyle = CONFIG.dotColor;
-      const startY = baseY + 20 * Math.sin((3 * 2 * Math.PI * lineStartX) / canvas.width);
-      const endY = baseY + 20 * Math.sin((3 * 2 * Math.PI * lineEndX) / canvas.width);
+      const startY = baseY + 20 * Math.sin((3 * 2 * Math.PI * lineStartX) / cssWidth);
+      const endY = baseY + 20 * Math.sin((3 * 2 * Math.PI * lineEndX) / cssWidth);
       ctx.arc(lineStartX, startY, 4 * (1 - stretch * 0.5), 0, Math.PI * 2);
       ctx.arc(lineEndX, endY, 4 * (1 - stretch * 0.5), 0, Math.PI * 2);
       ctx.fill();
@@ -288,7 +290,7 @@ function renderFlow() {
 
   } else {
     // Full flowing lines with dash animation
-    const pathLen = canvas.width + 50;
+    const pathLen = cssWidth + 50;
     const gap = pathLen * 0.05;
     const dash = pathLen - gap;
 
@@ -302,8 +304,8 @@ function renderFlow() {
       const yOff = i * flowSpacing;
 
       ctx.beginPath();
-      for (let x = 0; x <= canvas.width; x += 3) {
-        const y = centerY + yOff + 20 * Math.sin((3 * 2 * Math.PI * x) / canvas.width);
+      for (let x = 0; x <= cssWidth; x += 3) {
+        const y = centerY + yOff + 20 * Math.sin((3 * 2 * Math.PI * x) / cssWidth);
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
@@ -348,7 +350,7 @@ function startFlowLoop() {
 
   state.dashOffset = 0;
   flowLoop = animate(state, {
-    dashOffset: [0, -(canvas.width + 50)],
+    dashOffset: [0, -(cssWidth + 50)],
     duration: 2000,
     ease: 'linear',
     loop: true,
@@ -505,7 +507,7 @@ function runAnimation() {
   });
   // Dash animation leading to loop
   mainTimeline.add(state, {
-    dashOffset: [0, -(canvas.width + 50)],
+    dashOffset: [0, -(cssWidth + 50)],
     duration: 2000,
     ease: 'linear',
     onUpdate: render,
@@ -517,6 +519,8 @@ function runAnimation() {
 
 /**
  * Setup canvas with proper sizing
+ * Stores CSS dimensions separately so all coordinate math uses CSS pixels,
+ * while the canvas backing store uses DPR-scaled pixels for sharpness.
  */
 function setupCanvas() {
   if (!canvas) return;
@@ -524,6 +528,10 @@ function setupCanvas() {
   // Size canvas to match CSS dimensions
   const rect = canvas.getBoundingClientRect();
   const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2x for performance
+
+  // Store CSS dimensions for coordinate calculations
+  cssWidth = rect.width;
+  cssHeight = rect.height;
 
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
@@ -558,17 +566,27 @@ export function initMetamorphosis(canvasId = 'metamorphosis-canvas') {
 
 /**
  * Start the metamorphosis animation
- * Called by magnetic cursor when period is captured
+ * Called by magnetic cursor when period is captured.
+ * Debounce guard prevents rapid start/stop cycling from scroll triggers.
  */
+let _lastStartTime = 0;
+let _lastStopTime = 0;
+const START_STOP_DEBOUNCE = 300; // ms
+
 window.startMetamorphosis = () => {
   if (isRunning) return;
+
+  const now = performance.now();
+  if (now - _lastStopTime < START_STOP_DEBOUNCE) return;
+
   if (!canvas) {
     initMetamorphosis();
     if (!canvas) return;
   }
 
+  _lastStartTime = now;
   isRunning = true;
-  canvas.classList.add('active');
+  canvas.style.opacity = '1';
 
   // Re-setup in case window was resized
   setupCanvas();
@@ -580,13 +598,18 @@ window.startMetamorphosis = () => {
 
 /**
  * Stop the metamorphosis animation
- * Called by magnetic cursor when cursor escapes
+ * Called by magnetic cursor when cursor escapes.
+ * Debounce guard prevents rapid start/stop cycling from scroll triggers.
  */
 window.stopMetamorphosis = () => {
   if (!isRunning) return;
 
+  const now = performance.now();
+  if (now - _lastStartTime < START_STOP_DEBOUNCE) return;
+
+  _lastStopTime = now;
   isRunning = false;
-  canvas.classList.remove('active');
+  canvas.style.opacity = '0'; // JS controls opacity directly
 
   // Pause all animations
   if (mainTimeline) {
@@ -600,7 +623,7 @@ window.stopMetamorphosis = () => {
 
   // Clear canvas
   if (ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
   }
 
   console.log('[Metamorphosis] Stopped');

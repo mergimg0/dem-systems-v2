@@ -34,6 +34,153 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/main.css">
 
+  <!-- Semantic Animation Styles -->
+  <style>
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Sequential reveal - initial hidden state */
+    [data-reveal-order] {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    [data-reveal-order].revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Shared animation word styles */
+    .point-animation, .bespoke-animation, .friction-animation,
+    .jargon-animation, .focus-animation, .matters-animation {
+      position: relative;
+      display: inline-block;
+    }
+    .point-word, .bespoke-word, .friction-word,
+    .jargon-word, .focus-word, .matters-word {
+      display: inline-flex;
+    }
+    .point-word .char, .bespoke-word .char, .friction-word .char,
+    .jargon-word .char, .focus-word .char, .matters-word .char {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+
+    /* Point - dot that appears */
+    .point-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+      opacity: 0;
+      will-change: transform, opacity;
+      pointer-events: none;
+    }
+
+    /* Jargon - scrambling effect */
+    .jargon-word .char.scrambling {
+      opacity: 0.7;
+    }
+    .jargon-word .char.decoded {
+      opacity: 1;
+    }
+
+    /* Focus - context words */
+    .focus-animation {
+      display: inline;
+    }
+    .focus-context {
+      display: inline;
+      will-change: filter, opacity;
+    }
+    .focus-word {
+      will-change: transform;
+    }
+
+    /* Matters - emphasis */
+    .matters-word {
+      will-change: transform;
+    }
+
+    /* Eliminate - strikethrough trapdoor */
+    .eliminate-animation {
+      position: relative;
+      display: inline-block;
+    }
+    .eliminate-word {
+      display: inline-flex;
+      will-change: transform, opacity;
+    }
+    .eliminate-svg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .strike-line {
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+    }
+
+    /* Clarity - blur to clear */
+    .clarity-animation {
+      position: relative;
+      display: inline-block;
+    }
+    .clarity-word {
+      display: inline-flex;
+      will-change: filter, opacity;
+    }
+
+    /* Path - wave motion */
+    .path-animation {
+      position: relative;
+      display: inline-block;
+    }
+    .path-word {
+      display: inline-flex;
+    }
+    .path-word .char {
+      display: inline-block;
+      will-change: transform;
+    }
+
+    /* Resistance - compress release */
+    .resistance-animation {
+      position: relative;
+      display: inline-block;
+    }
+    .resistance-word {
+      display: inline-flex;
+    }
+    .resistance-word .char {
+      display: inline-block;
+      will-change: transform;
+    }
+
+    /* Simplicity - emergence */
+    .simplicity-animation {
+      position: relative;
+      display: inline-block;
+    }
+    .simplicity-word {
+      display: inline-flex;
+      will-change: filter, opacity, transform;
+    }
+    .simplicity-word .char {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+  </style>
+
   <!-- Reduced motion check -->
   <script>
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -67,6 +214,7 @@
   <header class="nav">
     <nav class="nav__container" aria-label="Main navigation">
       <a href="#" class="nav__logo" aria-label="DEM Systems - Back to top">
+        <img class="logo-sprite" src="assets/sprites/dem-logo/dem-01.png" alt="" aria-hidden="true" draggable="false">
         <span class="nav__logo-text">DEM Systems</span>
       </a>
       <ul class="nav__links">
@@ -97,18 +245,24 @@
              data-video-playlist="assets/videos/seamless-loop_00003.webm,assets/videos/seamless-loop_00007.webm,assets/videos/seamless-loop_00011.webm,assets/videos/seamless-loop_00013.webm,assets/videos/seamless-loop_00015.webm,assets/videos/seamless-loop_00017.webm,assets/videos/seamless-loop_00019.webm,assets/videos/seamless-loop_00021.webm,assets/videos/seamless-loop_00023.webm,assets/videos/seamless-loop_00025.webm,assets/videos/seamless-loop_00027.webm,assets/videos/seamless-loop_00029.webm,assets/videos/seamless-loop_00031.webm,assets/videos/seamless-loop_00035.webm,assets/videos/seamless-loop_00037.webm,assets/videos/seamless-loop_00039.webm,assets/videos/seamless-loop_00041.webm,assets/videos/seamless-loop_00049.webm">
       <div class="container">
         <div class="hero-title-wrapper">
-          <!-- Canvas for video-masked text effect -->
-          <div id="hero-video-text"
-               class="hero-video-text-container hero-reveal"
+          <!-- Hero text emergence animation -->
+          <div id="hero-emergence"
+               class="hero-emergence-container hero-reveal"
                data-text="DEM Systems"
-               data-video-playlist="assets/videos/seamless-loop_00003.webm,assets/videos/seamless-loop_00007.webm,assets/videos/seamless-loop_00011.webm,assets/videos/seamless-loop_00013.webm,assets/videos/seamless-loop_00015.webm,assets/videos/seamless-loop_00017.webm,assets/videos/seamless-loop_00019.webm,assets/videos/seamless-loop_00021.webm,assets/videos/seamless-loop_00023.webm,assets/videos/seamless-loop_00025.webm,assets/videos/seamless-loop_00027.webm,assets/videos/seamless-loop_00029.webm,assets/videos/seamless-loop_00031.webm,assets/videos/seamless-loop_00035.webm,assets/videos/seamless-loop_00037.webm,assets/videos/seamless-loop_00039.webm,assets/videos/seamless-loop_00041.webm,assets/videos/seamless-loop_00049.webm"
-               style="height: clamp(60px, 10vw, 120px); width: 100%;"
-               aria-label="DEM Systems">
+               style="height: clamp(60px, 10vw, 120px); width: 100%;">
+            <div class="emergence-canvas" aria-hidden="true" role="presentation">
+              <!-- Shapes injected by JS -->
+            </div>
           </div>
           <!-- Fallback for reduced motion / no-JS -->
           <h1 id="hero-title" class="hero-title hero-title--fallback hero-reveal">DEM Systems</h1>
         </div>
-        <p class="hero-tagline hero-reveal hero-reveal--delayed">
+        <!-- Primary tagline with kinetic typography -->
+        <p class="hero-tagline hero-tagline--kinetic hero-reveal hero-reveal--delayed">
+          Bespoke Software for Creative Agencies
+        </p>
+        <!-- Secondary tagline with typewriter effect -->
+        <p class="hero-tagline hero-tagline--secondary hero-reveal" style="--reveal-delay: 300ms;">
           <span class="typewriter">
             <span class="typewriter__text"></span><span class="period-trigger" id="period-trigger">.</span>
             <span class="typewriter__cursor typewriter__cursor--blink">|</span>
@@ -128,27 +282,9 @@
       <div class="container about-content">
         <h2 id="about-title" class="sr-only">About</h2>
         <div class="body-text">
-          <!-- P1: The Pain Point -->
-          <p class="p1-content scrollytelling-p" data-paragraph="1">
-            We <span class="sprite-hover-trigger" data-sprite="bricks">build</span> <span class="semantic-word" data-effect="flip3D">bespoke</span> software solutions
-            that eliminate the <span class="semantic-word" data-effect="kineticScatter">friction</span> points
-            <span class="sprite-hover-trigger" data-sprite="gears">grinding</span> your business to a halt.
-          </p>
-
-          <!-- P2: The Promise -->
-          <p class="p2-content scrollytelling-p about-p2" data-paragraph="2">
-            <span class="semantic-word" data-effect="strikethrough">No complicated <span class="sprite-hover-trigger" data-sprite="skulls">jargon</span>. No endless calls.</span>
-            Just the <span class="semantic-word" data-effect="svgDraw">path</span> of least resistance
-            between where you are and where <span class="sprite-hover-trigger" data-sprite="desks" data-position="below">operational</span>
-            <span class="sprite-hover-trigger" data-sprite="clarity" data-position="below"><span class="semantic-word" data-effect="glowPulse">clarity</span></span> lives.
-          </p>
-
-          <!-- P3: The Outcome -->
-          <p class="p3-content scrollytelling-p" data-paragraph="3">
-            We handle the <span class="sprite-hover-trigger" data-sprite="wires" data-position="below"><span class="semantic-word" data-effect="waveMotion">complex code</span></span>
-            so you can <span class="semantic-word" data-effect="converge">focus</span> on the work that
-            <span class="semantic-word" data-effect="converge">matters</span>.
-          </p>
+          <p class="about-wipe">We <span class="sprite-hover-trigger" data-sprite="bricks">build</span> <span class="bespoke-animation" id="bespoke-animation"><span class="bespoke-word">bespoke</span></span> software solutions that <span class="eliminate-animation" id="eliminate-animation"><span class="eliminate-word">eliminate</span><svg class="eliminate-svg" viewBox="0 0 100 20" preserveAspectRatio="none"><line class="strike-line" x1="0" y1="10" x2="100" y2="10"/></svg></span> the <span class="friction-animation" id="friction-animation"><span class="friction-word">friction</span></span> <span class="point-animation" id="point-animation"><span class="point-word">points</span><span class="point-dot" aria-hidden="true"></span></span> <span class="sprite-hover-trigger" data-sprite="gears">grinding</span> your business to a halt.</p>
+          <p class="about-wipe">No complicated <span class="jargon-animation" id="jargon-animation"><span class="sprite-hover-trigger" data-sprite="skulls"><span class="jargon-word">jargon</span></span></span>. No endless calls. Just the <span class="path-animation" id="path-animation"><span class="path-word">path</span></span> of least <span class="resistance-animation" id="resistance-animation"><span class="resistance-word">resistance</span></span> between where you are and where <span class="sprite-hover-trigger" data-sprite="desks" data-position="below">operational</span> <span class="sprite-hover-trigger" data-sprite="clarity" data-position="below"><span class="clarity-animation" id="clarity-animation"><span class="clarity-word">clarity</span></span></span> lives.</p>
+          <p class="about-wipe">We handle the <span class="sprite-hover-trigger" data-sprite="wires" data-position="below">complex code</span> so <span class="focus-animation" id="focus-animation"><span class="focus-context">you can</span> <span class="focus-word">focus</span> <span class="focus-context">on the</span></span> work that <span class="matters-animation" id="matters-animation"><span class="matters-word">matters</span></span>.</p>
         </div>
       </div>
     </section>
@@ -156,11 +292,11 @@
     <!-- Contact Section -->
     <section id="contact" class="section section--contact" aria-labelledby="contact-title">
       <div class="container">
-        <div class="contact-content" data-reveal>
-          <h2 id="contact-title" class="section-title">Book a conversation</h2>
-          <p class="contact-subtext">No commitment. Just a conversation about what's possible.</p>
+        <div class="contact-content">
+          <h2 id="contact-title" class="section-title contact-wipe">Book a conversation</h2>
+          <p class="contact-subtext contact-wipe">No commitment. Just a conversation about what's possible.</p>
 
-          <button class="cta"
+          <button class="cta contact-wipe"
                   data-cal-namespace="booking"
                   data-cal-link="ollie-roberts-ufdwdy/30min"
                   data-cal-config='{"layout":"month_view"}'
@@ -169,7 +305,7 @@
           </button>
 
           <!-- Email fallback -->
-          <p class="contact-email">
+          <p class="contact-email contact-wipe">
             Or email <a href="mailto:hello@demsystems.com">hello@demsystems.com</a>
           </p>
         </div>
@@ -233,12 +369,17 @@
   </main>
 
   <!-- Footer -->
-  <footer class="container footer">
-    <p class="small-text">&copy; 2025 DEM Systems</p>
-    <button class="motion-toggle" aria-pressed="true" aria-label="Toggle animations">
-      <span class="motion-toggle__label">Animations</span>
-      <span class="motion-toggle__status">On</span>
-    </button>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <p class="footer__copyright">&copy; 2026 DEM Systems</p>
+        <a href="/privacy" class="footer__link footer__legal">Privacy</a>
+        <button class="motion-toggle" aria-pressed="true" aria-label="Toggle animations">
+          <span class="motion-toggle__label">Animations</span>
+          <span class="motion-toggle__status">On</span>
+        </button>
+      </div>
+    </div>
   </footer>
 
   <!-- Mobile Bottom Navigation -->
@@ -256,7 +397,7 @@
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
-        "animejs": "https://cdn.jsdelivr.net/npm/animejs@4.0.0-beta.100/+esm"
+        "animejs": "https://cdn.jsdelivr.net/npm/animejs/+esm"
       }
     }
   </script>
@@ -264,19 +405,1126 @@
   <!-- Application Scripts -->
   <!-- <script type="module" src="js/thread.js"></script> --> <!-- Rope disabled temporarily -->
   <script type="module" src="js/main.js"></script>
-  <script type="module" src="js/hero-video-reveal.js"></script>
+  <!-- <script type="module" src="js/hero-video-reveal.js"></script> --> <!-- Replaced with hero-emergence -->
   <script type="module" src="js/blackout.js"></script>
   <script type="module" src="js/nav.js"></script>
   <script type="module" src="js/form.js"></script>
   <script type="module" src="js/typewriter.js"></script>
-  <!-- About section scroll-scrubbed animations -->
-  <script type="module" src="js/about-animations.js"></script>
-  <!-- Sprite hover animation for "build" word -->
+  <!-- Sprite hover animation -->
   <script type="module" src="js/sprite-hover.js"></script>
-  <!-- Old animation scripts (replaced by about-animations.js) -->
-  <!-- <script type="module" src="js/phrase-shift.js"></script> -->
-  <!-- <script type="module" src="js/semantic-animations.js"></script> -->
-  <!-- <script type="module" src="js/scrollytelling.js"></script> -->
+
+  <!-- Kinetic Typography (Holke79-inspired baseline animation) -->
+  <script type="module">
+    import { initKineticTypography } from './js/kinetic-typography.js';
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initKineticTypography());
+    } else {
+      initKineticTypography();
+    }
+  </script>
+
+  <!-- About section scroll-wipe reveal (top-to-bottom) -->
+  <script type="module">
+    import { initAboutWipe } from './js/about-wipe.js';
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAboutWipe);
+    } else {
+      initAboutWipe();
+    }
+  </script>
+
+  <!-- ============================================================
+       SCROLL-TIED ANIMATION CONTROLLER
+       Central controller for bidirectional scroll-scrubbed animations
+       MUST be loaded BEFORE all animation modules that use it
+       ============================================================ -->
+  <script>
+    // Collect all scroll-scrubbed animations (NOT a module - loads synchronously)
+    window.scrollAnimations = [];
+
+    // Register a scroll animation
+    window.registerScrollAnimation = function(config) {
+      window.scrollAnimations.push(config);
+      // If we're already set up, do an immediate update
+      if (window.scrollAnimationsReady) {
+        window.updateScrollAnimations();
+      }
+    };
+
+    // Update function
+    window.updateScrollAnimations = function() {
+      window.scrollAnimations.forEach(function(item) {
+        var element = item.element;
+        var update = item.update;
+        if (!element) return;
+
+        var rect = element.getBoundingClientRect();
+        var vh = window.innerHeight;
+
+        // Progress calculation:
+        // Animation completes when element reaches viewport center (not when exiting)
+        // rawProgress: 0 = entering, 0.5 = centered, 1 = exiting
+        // progress: 0 = entering, 1 = centered (2x speed, clamped)
+        var rawProgress = (vh - rect.top) / (vh + rect.height);
+        var progress = Math.max(0, Math.min(1, rawProgress * 2));
+
+        update(progress);
+      });
+    };
+
+    // RAF-throttled scroll handler
+    var ticking = false;
+
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          window.updateScrollAnimations();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Also update on resize
+    window.addEventListener('resize', function() {
+      requestAnimationFrame(window.updateScrollAnimations);
+    }, { passive: true });
+
+    // Mark ready and do initial update after DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        window.scrollAnimationsReady = true;
+        requestAnimationFrame(window.updateScrollAnimations);
+      });
+    } else {
+      window.scrollAnimationsReady = true;
+      requestAnimationFrame(window.updateScrollAnimations);
+    }
+  </script>
+
+  <!-- Metamorphosis scroll fade: smooth opacity transition as user scrolls down -->
+  <script>
+    (function() {
+      let metaCanvas = null;
+      let hero = null;
+      let ticking = false;
+
+      function updateOpacity() {
+        if (!hero || !metaCanvas) return;
+
+        const rect = hero.getBoundingClientRect();
+        const heroHeight = rect.height;
+        const scrolled = -rect.top;
+
+        // Fade starts at 5% scroll, fully faded at 30% (quick fade)
+        const fadeStart = heroHeight * 0.05;
+        const fadeEnd = heroHeight * 0.30;
+
+        let opacity;
+        if (scrolled <= fadeStart) {
+          opacity = 1;
+        } else if (scrolled >= fadeEnd) {
+          opacity = 0;
+        } else {
+          opacity = 1 - (scrolled - fadeStart) / (fadeEnd - fadeStart);
+        }
+
+        metaCanvas.style.opacity = String(Math.max(0, Math.min(1, opacity)));
+      }
+
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateOpacity();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      function init() {
+        metaCanvas = document.getElementById('metamorphosis-canvas');
+        hero = document.querySelector('.section--hero');
+        if (metaCanvas && hero) {
+          window.addEventListener('scroll', onScroll, { passive: true });
+          updateOpacity();
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+  <!-- POINT Semantic Animation: Collapse to dot (SCROLL-TIED) -->
+  <script type="module">
+    import { animate, stagger, createTimeline, utils } from 'animejs';
+
+    function splitTextIntoChars(el) {
+      const text = el.textContent;
+      el.innerHTML = '';
+      const chars = [];
+      for (const char of text) {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = char;
+        el.appendChild(span);
+        chars.push(span);
+      }
+      return { chars, text, revert: () => { el.textContent = text; } };
+    }
+
+    let split = null;
+    let pointTl = null;
+    let offsets = [];
+
+    function initPointAnimation() {
+      if (split) split.revert();
+      if (pointTl) pointTl.pause();
+
+      const container = document.querySelector('.point-animation');
+      const wordEl = document.querySelector('.point-word');
+      const dot = document.querySelector('.point-dot');
+
+      if (!container || !wordEl || !dot) return;
+
+      split = splitTextIntoChars(wordEl);
+
+      // Calculate center and offsets (pre-compute for deterministic seeking)
+      const wordRect = wordEl.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const centerX = (wordRect.left + wordRect.width / 2) - containerRect.left;
+      const centerY = (wordRect.top + wordRect.height / 2) - containerRect.top;
+
+      dot.style.left = `${centerX}px`;
+      dot.style.top = `${centerY}px`;
+      dot.style.transform = 'translate(-50%, -50%)';
+
+      offsets = split.chars.map(char => {
+        const rect = char.getBoundingClientRect();
+        const charCenterX = rect.left + rect.width / 2 - containerRect.left;
+        const charCenterY = rect.top + rect.height / 2 - containerRect.top;
+        return { x: centerX - charCenterX, y: centerY - charCenterY };
+      });
+
+      utils.set(split.chars, { translateX: 0, translateY: 0, scale: 1, opacity: 1 });
+      utils.set(dot, { opacity: 0, scale: 0 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      pointTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'outQuad' }
+      });
+
+      // === FORWARD: Characters collapse to dot ===
+      pointTl.add(split.chars, {
+        translateX: (el, i) => offsets[i].x,
+        translateY: (el, i) => offsets[i].y,
+        scale: [1, 0],
+        opacity: [1, 0],
+        duration: 500,
+        delay: stagger(40, { from: 'edges' }),
+        ease: 'inQuad'
+      });
+
+      pointTl.add(dot, {
+        opacity: [0, 1],
+        scale: [0, 1],
+        duration: 300,
+        ease: 'outBack'
+      }, '-=200');
+
+      // === PAUSE ===
+      pointTl.add({}, { duration: 800 });
+
+      // === REVERSE: Dot expands back to word ===
+      pointTl.add(dot, {
+        opacity: [1, 0],
+        scale: [1, 0],
+        duration: 200,
+        ease: 'inBack'
+      });
+
+      pointTl.add(split.chars, {
+        translateX: 0,
+        translateY: 0,
+        scale: [0, 1],
+        opacity: [0, 1],
+        duration: 400,
+        delay: stagger(30, { from: 'center' }),
+        ease: 'outBack'
+      }, '-=100');
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('point-animation'),
+        update: (progress) => {
+          if (pointTl) {
+            pointTl.seek(pointTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPointAnimation);
+    } else {
+      initPointAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayPoint = () => {
+      if (pointTl) {
+        pointTl.seek(0);
+        pointTl.play();
+      }
+    };
+  </script>
+
+  <!-- BESPOKE Semantic Animation: Scatter and assemble (SCROLL-TIED) -->
+  <script type="module">
+    import { animate, stagger, createTimeline, utils } from 'animejs';
+
+    function splitTextIntoChars(el) {
+      const text = el.textContent;
+      el.innerHTML = '';
+      const chars = [];
+      for (const char of text) {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = char;
+        el.appendChild(span);
+        chars.push(span);
+      }
+      return { chars, text, revert: () => { el.textContent = text; } };
+    }
+
+    let split = null;
+    let bespokeTl = null;
+    let scatterData = [];
+
+    function initBespokeAnimation() {
+      if (split) split.revert();
+      if (bespokeTl) bespokeTl.pause();
+
+      const wordEl = document.querySelector('.bespoke-word');
+      if (!wordEl) return;
+
+      split = splitTextIntoChars(wordEl);
+
+      // Pre-compute scatter positions for deterministic seeking
+      scatterData = split.chars.map(() => ({
+        x: (Math.random() - 0.5) * 150,
+        y: (Math.random() - 0.5) * 100,
+        rotation: (Math.random() - 0.5) * 45
+      }));
+
+      // Start visible and normal
+      utils.set(split.chars, { translateX: 0, translateY: 0, rotate: 0, scale: 1, opacity: 1 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      bespokeTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'outQuad' }
+      });
+
+      // === FORWARD: Scatter out ===
+      bespokeTl.add(split.chars, {
+        translateX: (el, i) => scatterData[i].x,
+        translateY: (el, i) => scatterData[i].y,
+        rotate: (el, i) => scatterData[i].rotation,
+        scale: 0.6,
+        opacity: 0.4,
+        duration: 500,
+        delay: stagger(40, { from: 'center' })
+      });
+
+      // === PAUSE ===
+      bespokeTl.add({}, { duration: 600 });
+
+      // === REVERSE: Assemble back ===
+      bespokeTl.add(split.chars, {
+        translateX: 0,
+        translateY: 0,
+        rotate: 0,
+        scale: 1,
+        opacity: 1,
+        duration: 500,
+        delay: stagger(40, { from: 'random' }),
+        ease: 'outBack'
+      });
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('bespoke-animation'),
+        update: (progress) => {
+          if (bespokeTl) {
+            bespokeTl.seek(bespokeTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBespokeAnimation);
+    } else {
+      initBespokeAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayBespoke = () => {
+      if (bespokeTl) {
+        bespokeTl.seek(0);
+        bespokeTl.play();
+      }
+    };
+  </script>
+
+  <!-- FRICTION Semantic Animation: Vibrate and settle (SCROLL-TIED) -->
+  <script type="module">
+    import { animate, stagger, createTimeline, utils } from 'animejs';
+
+    function splitTextIntoChars(el) {
+      const text = el.textContent;
+      el.innerHTML = '';
+      const chars = [];
+      for (const char of text) {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = char;
+        el.appendChild(span);
+        chars.push(span);
+      }
+      return { chars, text, revert: () => { el.textContent = text; } };
+    }
+
+    let split = null;
+    let frictionTl = null;
+
+    function initFrictionAnimation() {
+      if (split) split.revert();
+      if (frictionTl) frictionTl.pause();
+
+      const wordEl = document.querySelector('.friction-word');
+      if (!wordEl) return;
+
+      split = splitTextIntoChars(wordEl);
+
+      utils.set(split.chars, { translateX: 0, translateY: 0, rotate: 0 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      frictionTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'linear' }
+      });
+
+      // === FORWARD: Intense vibration ===
+      frictionTl.add(split.chars, {
+        translateX: [-3, 3, -2, 2, -3, 3, -2, 2],
+        translateY: [-1, 1, -1.5, 1.5, -1, 1],
+        rotate: [-2, 2, -1.5, 1.5, -2, 2],
+        duration: 400,
+        delay: stagger(20)
+      });
+
+      // Medium vibration
+      frictionTl.add(split.chars, {
+        translateX: [-2, 2, -1.5, 1.5, -1, 1],
+        translateY: [-0.5, 0.5, -1, 1],
+        rotate: [-1, 1, -0.5, 0.5],
+        duration: 300
+      });
+
+      // Light vibration
+      frictionTl.add(split.chars, {
+        translateX: [-1, 1, -0.5, 0.5, -0.3, 0.3],
+        translateY: [-0.3, 0.3, -0.2, 0.2],
+        rotate: [-0.3, 0.3],
+        duration: 250
+      });
+
+      // Settle
+      frictionTl.add(split.chars, {
+        translateX: 0,
+        translateY: 0,
+        rotate: 0,
+        duration: 200,
+        ease: 'outQuad'
+      });
+
+      // === PAUSE ===
+      frictionTl.add({}, { duration: 600 });
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('friction-animation'),
+        update: (progress) => {
+          if (frictionTl) {
+            frictionTl.seek(frictionTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFrictionAnimation);
+    } else {
+      initFrictionAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayFriction = () => {
+      if (frictionTl) {
+        frictionTl.seek(0);
+        frictionTl.play();
+      }
+    };
+  </script>
+
+  <!-- JARGON Semantic Animation: Scramble decode (IntersectionObserver - NOT scroll-tied) -->
+  <script type="module">
+    import { animate, createTimeline, utils } from 'animejs';
+
+    const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!?';
+
+    function splitTextIntoChars(el) {
+      const text = el.textContent;
+      el.innerHTML = '';
+      const chars = [];
+      for (const char of text) {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = char;
+        span.dataset.original = char;
+        el.appendChild(span);
+        chars.push(span);
+      }
+      return { chars, text, revert: () => { el.textContent = text; } };
+    }
+
+    let split = null;
+    let intervals = [];
+    let timeouts = [];
+
+    function initJargonAnimation() {
+      // Cleanup
+      intervals.forEach(id => clearInterval(id));
+      timeouts.forEach(id => clearTimeout(id));
+      intervals = [];
+      timeouts = [];
+      if (split) split.revert();
+
+      const wordEl = document.querySelector('.jargon-word');
+      if (!wordEl) return;
+
+      split = splitTextIntoChars(wordEl);
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // === FORWARD: Scramble then decode left-to-right ===
+      split.chars.forEach((char, i) => {
+        char.classList.add('scrambling');
+
+        // Start scrambling
+        const intervalId = setInterval(() => {
+          char.textContent = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+        }, 50);
+        intervals.push(intervalId);
+
+        // Decode after staggered delay
+        const timeoutId = setTimeout(() => {
+          clearInterval(intervalId);
+          char.textContent = char.dataset.original;
+          char.classList.remove('scrambling');
+          char.classList.add('decoded');
+          utils.set(char, { scale: [1.2, 1] });
+        }, 300 + (i * 150));
+        timeouts.push(timeoutId);
+      });
+
+      // === PAUSE then REVERSE: Re-scramble right-to-left then decode ===
+      const pauseTimeout = setTimeout(() => {
+        // Re-scramble
+        split.chars.forEach((char, i) => {
+          const delay = (split.chars.length - 1 - i) * 100;
+
+          const scrambleTimeout = setTimeout(() => {
+            char.classList.remove('decoded');
+            char.classList.add('scrambling');
+
+            const intervalId = setInterval(() => {
+              char.textContent = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+            }, 50);
+            intervals.push(intervalId);
+
+            // Decode back
+            const decodeTimeout = setTimeout(() => {
+              clearInterval(intervalId);
+              char.textContent = char.dataset.original;
+              char.classList.remove('scrambling');
+              char.classList.add('decoded');
+            }, 400);
+            timeouts.push(decodeTimeout);
+          }, delay);
+          timeouts.push(scrambleTimeout);
+        });
+      }, 1500);
+      timeouts.push(pauseTimeout);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          initJargonAnimation();
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const jargonEl = document.getElementById('jargon-animation');
+    if (jargonEl) observer.observe(jargonEl);
+    window.replayJargon = initJargonAnimation;
+  </script>
+
+  <!-- FOCUS Semantic Animation: Context blur (SCROLL-TIED) -->
+  <script type="module">
+    import { createTimeline, utils } from 'animejs';
+
+    let focusTl = null;
+
+    function initFocusAnimation() {
+      if (focusTl) focusTl.pause();
+
+      const word = document.querySelector('.focus-word');
+      const contextWords = document.querySelectorAll('.focus-context');
+
+      if (!word || !contextWords.length) return;
+
+      utils.set(word, { scale: 1 });
+      utils.set(contextWords, { filter: 'blur(0px)', opacity: 1 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      focusTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'inOutQuad' }
+      });
+
+      // === FORWARD: Blur context, emphasize focus ===
+      focusTl.add(contextWords, {
+        filter: ['blur(0px)', 'blur(3px)'],
+        opacity: [1, 0.4],
+        duration: 400
+      });
+
+      focusTl.add(word, {
+        scale: [1, 1.15],
+        duration: 300,
+        ease: 'outBack'
+      }, '-=300');
+
+      // === PAUSE ===
+      focusTl.add({}, { duration: 800 });
+
+      // === REVERSE: Clear context ===
+      focusTl.add(word, {
+        scale: [1.15, 1],
+        duration: 300,
+        ease: 'inOutQuad'
+      });
+
+      focusTl.add(contextWords, {
+        filter: ['blur(3px)', 'blur(0px)'],
+        opacity: [0.4, 1],
+        duration: 400
+      }, '-=200');
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('focus-animation'),
+        update: (progress) => {
+          if (focusTl) {
+            focusTl.seek(focusTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFocusAnimation);
+    } else {
+      initFocusAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayFocus = () => {
+      if (focusTl) {
+        focusTl.seek(0);
+        focusTl.play();
+      }
+    };
+  </script>
+
+  <!-- MATTERS Semantic Animation: Scale emphasis (SCROLL-TIED) -->
+  <script type="module">
+    import { createTimeline, utils } from 'animejs';
+
+    let mattersTl = null;
+
+    function initMattersAnimation() {
+      if (mattersTl) mattersTl.pause();
+
+      const word = document.querySelector('.matters-word');
+      if (!word) return;
+
+      utils.set(word, { scale: 1 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      mattersTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'inOutQuad' }
+      });
+
+      // === FORWARD: Grow to emphasize ===
+      mattersTl.add(word, {
+        scale: [1, 1.3],
+        duration: 400,
+        ease: 'outBack'
+      });
+
+      // === PAUSE ===
+      mattersTl.add({}, { duration: 600 });
+
+      // === REVERSE: Return to normal ===
+      mattersTl.add(word, {
+        scale: [1.3, 1],
+        duration: 350,
+        ease: 'inOutQuad'
+      });
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('matters-animation'),
+        update: (progress) => {
+          if (mattersTl) {
+            mattersTl.seek(mattersTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMattersAnimation);
+    } else {
+      initMattersAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayMatters = () => {
+      if (mattersTl) {
+        mattersTl.seek(0);
+        mattersTl.play();
+      }
+    };
+  </script>
+
+  <!-- ELIMINATE Semantic Animation: Strikethrough then trapdoor fall (SCROLL-TIED) -->
+  <script type="module">
+    import { createTimeline, utils } from 'animejs';
+
+    let eliminateTl = null;
+
+    function initEliminateAnimation() {
+      if (eliminateTl) eliminateTl.pause();
+
+      const word = document.querySelector('.eliminate-word');
+      const line = document.querySelector('.strike-line');
+
+      if (!word || !line) return;
+
+      // Reset
+      utils.set(word, { translateY: 0, opacity: 1 });
+      utils.set(line, { strokeDashoffset: 200 });
+      line.setAttribute('y1', 10);
+      line.setAttribute('y2', 10);
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      eliminateTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'outQuad' }
+      });
+
+      // === FORWARD ===
+
+      // Phase 1: Draw strikethrough
+      eliminateTl.add(line, {
+        strokeDashoffset: [200, 0],
+        duration: 300,
+        ease: 'inOutQuad'
+      });
+
+      // Phase 2: Line falls to underline
+      eliminateTl.add(line, {
+        y1: 18,
+        y2: 18,
+        duration: 200,
+        ease: 'inQuad'
+      }, '+=100');
+
+      // Phase 3: Word falls through (trapdoor)
+      eliminateTl.add(word, {
+        translateY: [0, 30],
+        opacity: [1, 0],
+        duration: 300,
+        ease: 'inQuad'
+      }, '+=100');
+
+      // === PAUSE ===
+      eliminateTl.add({}, { duration: 600 });
+
+      // === REVERSE ===
+
+      // Word rises back
+      eliminateTl.add(word, {
+        translateY: [30, 0],
+        opacity: [0, 1],
+        duration: 300,
+        ease: 'outQuad'
+      });
+
+      // Line rises back to middle
+      eliminateTl.add(line, {
+        y1: 10,
+        y2: 10,
+        duration: 200,
+        ease: 'outQuad'
+      });
+
+      // Line retracts
+      eliminateTl.add(line, {
+        strokeDashoffset: [0, 200],
+        duration: 300,
+        ease: 'inOutQuad'
+      });
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('eliminate-animation'),
+        update: (progress) => {
+          if (eliminateTl) {
+            eliminateTl.seek(eliminateTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initEliminateAnimation);
+    } else {
+      initEliminateAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayEliminate = () => {
+      if (eliminateTl) {
+        eliminateTl.seek(0);
+        eliminateTl.play();
+      }
+    };
+  </script>
+
+  <!-- CLARITY Semantic Animation: Blur to crystal clear (SCROLL-TIED) -->
+  <script type="module">
+    import { createTimeline, utils } from 'animejs';
+
+    let clarityTl = null;
+
+    function initClarityAnimation() {
+      if (clarityTl) clarityTl.pause();
+
+      const word = document.querySelector('.clarity-word');
+      if (!word) return;
+
+      utils.set(word, { filter: 'blur(0px)', opacity: 1 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      clarityTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'inOutQuad' }
+      });
+
+      // === FORWARD: Clear -> Blur -> Crystal Clear ===
+
+      // Phase 1: Blur out (losing clarity)
+      clarityTl.add(word, {
+        filter: ['blur(0px)', 'blur(6px)'],
+        opacity: [1, 0.5],
+        duration: 400
+      });
+
+      // Phase 2: Hold blurry (PAUSE)
+      clarityTl.add({}, { duration: 300 });
+
+      // Phase 3: Snap to crystal clear (gaining clarity)
+      clarityTl.add(word, {
+        filter: ['blur(6px)', 'blur(0px)'],
+        opacity: [0.5, 1],
+        duration: 300,
+        ease: 'outQuad'
+      });
+
+      // Phase 4: Brightness pulse (moment of clarity)
+      clarityTl.add(word, {
+        filter: ['blur(0px) brightness(1)', 'blur(0px) brightness(1.3)', 'blur(0px) brightness(1)'],
+        duration: 400,
+        ease: 'inOutSine'
+      });
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('clarity-animation'),
+        update: (progress) => {
+          if (clarityTl) {
+            clarityTl.seek(clarityTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initClarityAnimation);
+    } else {
+      initClarityAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayClarity = () => {
+      if (clarityTl) {
+        clarityTl.seek(0);
+        clarityTl.play();
+      }
+    };
+  </script>
+
+  <!-- PATH Semantic Animation: Letters wave along a path (SCROLL-TIED) -->
+  <script type="module">
+    import { animate, stagger, createTimeline, utils } from 'animejs';
+
+    function splitTextIntoChars(el) {
+      const text = el.textContent;
+      el.innerHTML = '';
+      const chars = [];
+      for (const char of text) {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = char;
+        el.appendChild(span);
+        chars.push(span);
+      }
+      return { chars, text, revert: () => { el.textContent = text; } };
+    }
+
+    let split = null;
+    let pathTl = null;
+
+    function initPathAnimation() {
+      if (split) split.revert();
+      if (pathTl) pathTl.pause();
+
+      const wordEl = document.querySelector('.path-word');
+      if (!wordEl) return;
+
+      split = splitTextIntoChars(wordEl);
+
+      utils.set(split.chars, { translateX: 0, translateY: 0 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      pathTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'inOutSine' }
+      });
+
+      // === FORWARD: Wave motion (like following a curved path) ===
+
+      // Phase 1: Letters wave up and down in sequence
+      pathTl.add(split.chars, {
+        translateY: [0, -8, 0, 8, 0],
+        duration: 800,
+        delay: stagger(100, { from: 'first' })
+      });
+
+      // Phase 2: Horizontal wave (serpentine)
+      pathTl.add(split.chars, {
+        translateX: [0, 4, 0, -4, 0],
+        translateY: [0, -4, 0, 4, 0],
+        duration: 600,
+        delay: stagger(80, { from: 'first' })
+      });
+
+      // Phase 3: Settle back
+      pathTl.add(split.chars, {
+        translateX: 0,
+        translateY: 0,
+        duration: 300,
+        ease: 'outQuad'
+      });
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('path-animation'),
+        update: (progress) => {
+          if (pathTl) {
+            pathTl.seek(pathTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPathAnimation);
+    } else {
+      initPathAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayPath = () => {
+      if (pathTl) {
+        pathTl.seek(0);
+        pathTl.play();
+      }
+    };
+  </script>
+
+  <!-- RESISTANCE Semantic Animation: Compress then elastic release (SCROLL-TIED) -->
+  <script type="module">
+    import { animate, stagger, createTimeline, utils } from 'animejs';
+
+    function splitTextIntoChars(el) {
+      const text = el.textContent;
+      el.innerHTML = '';
+      const chars = [];
+      for (const char of text) {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = char;
+        el.appendChild(span);
+        chars.push(span);
+      }
+      return { chars, text, revert: () => { el.textContent = text; } };
+    }
+
+    let split = null;
+    let resistanceTl = null;
+
+    function initResistanceAnimation() {
+      if (split) split.revert();
+      if (resistanceTl) resistanceTl.pause();
+
+      const wordEl = document.querySelector('.resistance-word');
+      if (!wordEl) return;
+
+      split = splitTextIntoChars(wordEl);
+
+      utils.set(split.chars, { translateX: 0, scaleX: 1, skewX: 0 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Create timeline with autoplay: false for scroll control
+      resistanceTl = createTimeline({
+        autoplay: false,
+        defaults: { ease: 'linear' }
+      });
+
+      // === FORWARD: Build pressure -> compress -> release ===
+
+      // Phase 1: Building pressure (lean and compress)
+      resistanceTl.add(split.chars, {
+        translateX: [0, -5],
+        scaleX: [1, 0.92],
+        skewX: [0, 4],
+        duration: 400,
+        ease: 'inQuad',
+        delay: stagger(25, { from: 'first' })
+      });
+
+      // Phase 2: Maximum compression
+      resistanceTl.add(split.chars, {
+        translateX: (el, i) => -8 - (i * 1.5),
+        scaleX: 0.85,
+        skewX: 6,
+        duration: 300,
+        ease: 'inQuad'
+      });
+
+      // Phase 3: Breakthrough! Elastic release
+      resistanceTl.add(split.chars, {
+        translateX: [null, 10, 0],
+        scaleX: [0.85, 1.1, 1],
+        skewX: [6, -3, 0],
+        duration: 600,
+        ease: 'outElastic(1, 0.6)',
+        delay: stagger(20, { from: 'last' })
+      });
+
+      // Phase 4: Victory settle
+      resistanceTl.add(split.chars, {
+        scale: [1, 1.05, 1],
+        duration: 250,
+        ease: 'inOutSine'
+      });
+
+      // Register with scroll controller
+      window.registerScrollAnimation({
+        element: document.getElementById('resistance-animation'),
+        update: (progress) => {
+          if (resistanceTl) {
+            resistanceTl.seek(resistanceTl.duration * progress);
+          }
+        }
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initResistanceAnimation);
+    } else {
+      initResistanceAnimation();
+    }
+
+    // Replay function for debugging
+    window.replayResistance = () => {
+      if (resistanceTl) {
+        resistanceTl.seek(0);
+        resistanceTl.play();
+      }
+    };
+  </script>
 
   <!-- Custom Cursor (Optional Enhancement)
        Small morphing dot that indicates interactive elements.
@@ -284,6 +1532,22 @@
   <script type="module">
     import { initCustomCursor } from './js/cursor.js';
     initCustomCursor();
+  </script>
+
+  <!-- Logo sprite animation (proximity-triggered retro CRT frames) -->
+  <script type="module">
+    import { initLogoSprite } from './js/logo-sprite.js';
+    initLogoSprite();
+  </script>
+
+  <!-- Contact section animations (title bounce, underline draw, border draw, text scramble) -->
+  <script type="module">
+    import { initContactAnimations } from './js/contact-animations.js';
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initContactAnimations);
+    } else {
+      initContactAnimations();
+    }
   </script>
 
   <!-- Magnetic Cursor & Metamorphosis Animation -->
@@ -296,13 +1560,15 @@
       document.addEventListener('DOMContentLoaded', () => {
         // Small delay to ensure cursor.js has initialized first
         setTimeout(() => {
-          initMetamorphosis();
+          // Autoplay metamorphosis on page load (not scroll-tied)
+          initMetamorphosis({ autoplay: true, autoplayDelay: 800 });
           initMagneticCursor();
         }, 150);
       });
     } else {
       setTimeout(() => {
-        initMetamorphosis();
+        // Autoplay metamorphosis on page load (not scroll-tied)
+        initMetamorphosis({ autoplay: true, autoplayDelay: 800 });
         initMagneticCursor();
       }, 150);
     }
@@ -343,6 +1609,18 @@
       hideEventTypeDetails: false,
       layout: 'month_view'
     });
+  </script>
+
+  <!-- Hero Text Emergence Animation -->
+  <script type="module">
+    import { initHeroEmergence } from './js/hero-emergence/index.js';
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initHeroEmergence());
+    } else {
+      initHeroEmergence();
+    }
   </script>
 </body>
 </html>
