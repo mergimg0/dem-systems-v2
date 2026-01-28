@@ -542,8 +542,23 @@ function setupCanvas() {
 
 /**
  * Initialize the metamorphosis animation
+ * @param {string|Object} options - Canvas ID string or options object
+ * @param {string} options.canvasId - Canvas element ID (default: 'metamorphosis-canvas')
+ * @param {boolean} options.autoplay - Whether to auto-start the animation (default: false)
+ * @param {number} options.autoplayDelay - Delay in ms before autoplay starts (default: 0)
  */
-export function initMetamorphosis(canvasId = 'metamorphosis-canvas') {
+export function initMetamorphosis(options = {}) {
+  // Handle backwards compatibility: string parameter = canvasId
+  const config = typeof options === 'string'
+    ? { canvasId: options }
+    : options;
+
+  const {
+    canvasId = 'metamorphosis-canvas',
+    autoplay = false,
+    autoplayDelay = 0
+  } = config;
+
   canvas = document.getElementById(canvasId);
 
   if (!canvas) {
@@ -562,6 +577,14 @@ export function initMetamorphosis(canvasId = 'metamorphosis-canvas') {
   initHarmonics();
 
   console.log('[Metamorphosis] Initialized');
+
+  // Handle autoplay
+  if (autoplay) {
+    setTimeout(() => {
+      window.startMetamorphosis();
+      console.log('[Metamorphosis] Autoplay triggered after', autoplayDelay, 'ms');
+    }, autoplayDelay);
+  }
 }
 
 /**

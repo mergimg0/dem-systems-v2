@@ -9,6 +9,7 @@ const DEFAULT_CONFIG = {
   text: 'DEM Systems',
   fontFamily: 'Satoshi, sans-serif',
   fontWeight: '700',
+  letterSpacing: -0.05, // Tighter tracking for display text (matches premium typography)
   samplingDensity: 2, // Sample every Nth pixel (lower = more points)
   minPointsPerLetter: 50,
   maxPointsPerLetter: 80,
@@ -101,28 +102,32 @@ function getLetterBoundaries(text, fontSize, fontFamily, fontWeight) {
 
     if (char === ' ') {
       const spaceWidth = ctx.measureText(' ').width;
+      // Apply tighter tracking for display typography
+      const adjustedSpaceWidth = spaceWidth * (1 + DEFAULT_CONFIG.letterSpacing);
       boundaries.push({
         char,
         index: i,
         isSpace: true,
         startX: currentX,
-        endX: currentX + spaceWidth,
-        width: spaceWidth,
+        endX: currentX + adjustedSpaceWidth,
+        width: adjustedSpaceWidth,
       });
-      currentX += spaceWidth;
+      currentX += adjustedSpaceWidth;
     } else {
       const metrics = ctx.measureText(char);
       const width = metrics.width;
+      // Apply tighter tracking for display typography
+      const adjustedWidth = width * (1 + DEFAULT_CONFIG.letterSpacing);
 
       boundaries.push({
         char,
         index: i,
         isSpace: false,
         startX: currentX,
-        endX: currentX + width,
-        width,
+        endX: currentX + adjustedWidth,
+        width: adjustedWidth,
       });
-      currentX += width;
+      currentX += adjustedWidth;
     }
   }
 
