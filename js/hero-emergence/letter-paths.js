@@ -9,10 +9,10 @@ const DEFAULT_CONFIG = {
   text: 'DEM Systems',
   fontFamily: 'Satoshi, sans-serif',
   fontWeight: '700',
-  letterSpacing: -0.05, // Tighter tracking for display text (matches premium typography)
-  samplingDensity: 2, // Sample every Nth pixel (lower = more points)
-  minPointsPerLetter: 50,
-  maxPointsPerLetter: 80,
+  letterSpacing: -0.02, // Tighter tracking for display text (matches premium typography)
+  samplingDensity: 1, // Sample every pixel (lower = more points, denser letterforms)
+  minPointsPerLetter: 350,
+  maxPointsPerLetter: 500,
 };
 
 /**

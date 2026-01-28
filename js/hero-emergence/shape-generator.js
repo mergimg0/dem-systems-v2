@@ -86,20 +86,20 @@ function generateColor(seed, withAlpha = true) {
 }
 
 /**
- * Generate shape size based on type - SMALLER for high density
+ * Generate shape size based on type - sized for solid letterform density
  */
 function generateSize(type, seed, densityFactor = 1) {
-  // Base sizes reduced for higher density
+  // Base sizes optimized for dense, readable letterforms
   const base = {
-    'circle': { min: 3, max: 10 },
-    'square': { min: 2, max: 8 },
-    'line': { min: 8, max: 20 },
-    'blob': { min: 4, max: 12 },
+    'circle': { min: 4, max: 12 },
+    'square': { min: 3, max: 10 },
+    'line': { min: 6, max: 14 },
+    'blob': { min: 5, max: 14 },
   };
-  const range = base[type] || { min: 3, max: 8 };
+  const range = base[type] || { min: 4, max: 10 };
 
-  // Scale down slightly for very high density
-  const scale = Math.max(0.6, 1 - (densityFactor * 0.3));
+  // Minimal scaling - keep shapes large enough to form solid letters
+  const scale = Math.max(0.8, 1 - (densityFactor * 0.1));
   return randomInRange(range.min * scale, range.max * scale, seed);
 }
 

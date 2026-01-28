@@ -362,52 +362,6 @@ if (document.readyState === 'loading') {
   }
 }
 
-/**
- * Setup motion toggle button
- */
-function setupMotionToggle() {
-  const toggle = document.querySelector('.motion-toggle');
-  if (!toggle) return;
-
-  let motionEnabled = !prefersReducedMotion;
-
-  // Update initial state based on system preference
-  if (prefersReducedMotion) {
-    toggle.setAttribute('aria-pressed', 'false');
-    toggle.querySelector('.motion-toggle__status').textContent = 'Off';
-  }
-
-  toggle.addEventListener('click', () => {
-    motionEnabled = !motionEnabled;
-    toggle.setAttribute('aria-pressed', motionEnabled ? 'true' : 'false');
-    toggle.querySelector('.motion-toggle__status').textContent = motionEnabled ? 'On' : 'Off';
-
-    if (motionEnabled) {
-      document.documentElement.classList.remove('reduced-motion');
-      if (!isInitialized) {
-        initScrollytelling();
-      }
-    } else {
-      document.documentElement.classList.add('reduced-motion');
-      destroyScrollytelling();
-      // Show all paragraphs in static state
-      document.querySelectorAll('.p1-content, .p2-content, .p3-content').forEach(p => {
-        if (p) {
-          p.style.opacity = '1';
-          p.style.visibility = 'visible';
-        }
-      });
-    }
-  });
-}
-
-// Setup motion toggle on DOM ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', setupMotionToggle);
-} else {
-  setupMotionToggle();
-}
-
 // Export for other modules
 export {
   initScrollytelling,

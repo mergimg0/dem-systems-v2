@@ -582,72 +582,12 @@ body {
   color: var(--color-text-muted);
 }
 
-.footer__bottom .motion-toggle {
-  margin-left: auto;
-}
-
 /* Footer Responsive */
 @media (max-width: 600px) {
   .footer__bottom {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-small);
-  }
-
-  .footer__bottom .motion-toggle {
-    margin-left: 0;
-  }
-}
-
-/* Motion Toggle Button */
-.motion-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.5em 1em;
-  font-family: inherit;
-  font-size: var(--font-size-small);
-  color: var(--color-text-muted);
-  background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  cursor: pointer;
-  transition:
-    border-color var(--duration-base) var(--ease-subtle),
-    color var(--duration-base) var(--ease-subtle);
-}
-
-.motion-toggle:hover {
-  border-color: rgba(0, 0, 0, 0.2);
-  color: var(--color-text);
-}
-
-.motion-toggle:focus-visible {
-  outline: 2px solid var(--color-text);
-  outline-offset: 2px;
-}
-
-.motion-toggle__label {
-  font-weight: var(--font-weight-medium);
-}
-
-.motion-toggle__status {
-  opacity: 0.7;
-}
-
-/* Motion toggle off state */
-.motion-toggle[aria-pressed="false"] {
-  border-color: rgba(0, 0, 0, 0.05);
-}
-
-.motion-toggle[aria-pressed="false"] .motion-toggle__status {
-  opacity: 0.5;
-}
-
-/* Hide motion toggle if reduced motion is system preference */
-@media (prefers-reduced-motion: reduce) {
-  .motion-toggle {
-    display: none;
   }
 }
 
@@ -678,7 +618,7 @@ body {
 
 /* Contact follows shortly after About */
 .section--contact {
-  margin-top: -10vh;
+  margin-top: -20vh;
   padding-bottom: 20vh; /* Center contact content when fully scrolled */
 }
 
@@ -2613,7 +2553,7 @@ input, textarea {
 
   .about-content {
     /* Ensure text is readable on smaller screens */
-    padding: var(--space-element) 0;
+    padding: var(--space-element) var(--space-small);
   }
 
   /* Simplify text effects on mobile */
