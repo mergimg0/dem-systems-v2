@@ -242,17 +242,16 @@
 
     <!-- Hero Section -->
     <section class="section section--hero" aria-labelledby="hero-title"
-             data-video-playlist="assets/videos/seamless-loop_00003.webm,assets/videos/seamless-loop_00007.webm,assets/videos/seamless-loop_00011.webm,assets/videos/seamless-loop_00013.webm,assets/videos/seamless-loop_00015.webm,assets/videos/seamless-loop_00017.webm,assets/videos/seamless-loop_00019.webm,assets/videos/seamless-loop_00021.webm,assets/videos/seamless-loop_00023.webm,assets/videos/seamless-loop_00025.webm,assets/videos/seamless-loop_00027.webm,assets/videos/seamless-loop_00029.webm,assets/videos/seamless-loop_00031.webm,assets/videos/seamless-loop_00035.webm,assets/videos/seamless-loop_00037.webm,assets/videos/seamless-loop_00039.webm,assets/videos/seamless-loop_00041.webm,assets/videos/seamless-loop_00049.webm">
+             data-video-playlist="assets/videos/combined.mp4,assets/videos/seamless-loop_00012.mp4,assets/videos/combined4.mp4,assets/videos/seamless-loop_00024.mp4,assets/videos/seamless-loop_00042.mp4">
       <div class="container">
         <div class="hero-title-wrapper">
-          <!-- Hero text emergence animation -->
-          <div id="hero-emergence"
-               class="hero-emergence-container hero-reveal"
+          <!-- Canvas for video-masked text effect -->
+          <div id="hero-video-text"
+               class="hero-video-text-container hero-reveal"
                data-text="DEM Systems"
-               style="height: clamp(60px, 10vw, 120px); width: 100%;">
-            <div class="emergence-canvas" aria-hidden="true" role="presentation">
-              <!-- Shapes injected by JS -->
-            </div>
+               data-video-playlist="assets/videos/combined.mp4,assets/videos/seamless-loop_00012.mp4,assets/videos/combined4.mp4,assets/videos/seamless-loop_00024.mp4,assets/videos/seamless-loop_00042.mp4"
+               style="height: clamp(60px, 10vw, 120px); width: 100%;"
+               aria-label="DEM Systems">
           </div>
           <!-- Fallback for reduced motion / no-JS -->
           <h1 id="hero-title" class="hero-title hero-title--fallback hero-reveal">DEM Systems</h1>
@@ -401,7 +400,7 @@
   <!-- Application Scripts -->
   <!-- <script type="module" src="js/thread.js"></script> --> <!-- Rope disabled temporarily -->
   <script type="module" src="js/main.js"></script>
-  <!-- <script type="module" src="js/hero-video-reveal.js"></script> --> <!-- Replaced with hero-emergence -->
+  <script type="module" src="js/hero-video-reveal.js"></script>
   <script type="module" src="js/blackout.js"></script>
   <script type="module" src="js/nav.js"></script>
   <script type="module" src="js/form.js"></script>
@@ -553,6 +552,154 @@
         init();
       }
     })();
+  </script>
+
+  <!-- HERO SCROLL TRIGGER: Auto-fire magnetic cursor at 30% + scroll-tied opacity fade -->
+  <script type="module">
+    import { triggerCapture, isTriggered, resetCapture } from './js/magnetic-cursor.js';
+    import { initHeroVideoReveal } from './js/hero-video-reveal.js';
+
+    const TRIGGER_THRESHOLD = 0.30; // 30% scroll through hero
+    let isTriggeredState = false;
+
+    // Cache DOM references
+    let hero = null;
+    let metaCanvas = null;
+    let aboutContent = null;
+    let periodRectSvg = null;
+
+    function initRefs() {
+      hero = document.querySelector('.section--hero');
+      metaCanvas = document.getElementById('metamorphosis-canvas');
+      aboutContent = document.querySelector('.about-content');
+      periodRectSvg = document.getElementById('period-rect-svg');
+    }
+
+    function checkHeroScroll() {
+      if (!hero) return;
+
+      const rect = hero.getBoundingClientRect();
+      const heroHeight = rect.height;
+      const scrolledIntoHero = -rect.top;
+      const progress = scrolledIntoHero / heroHeight;
+
+      // --- TRIGGER at 30% (scrolling down) ---
+      if (!isTriggeredState && progress >= TRIGGER_THRESHOLD && progress < 1) {
+        isTriggeredState = true;
+
+        // 1. Trigger magnetic cursor capture
+        triggerCapture();
+
+        // 2. Fade out video reveal
+        if (window.fadeOutVideoReveal) {
+          window.fadeOutVideoReveal();
+        }
+
+        console.log('[HeroScrollTrigger] Activated at', Math.round(progress * 100) + '%');
+      }
+
+      // --- RESET when scrolling back up past 30% ---
+      if (isTriggeredState && progress < TRIGGER_THRESHOLD) {
+        isTriggeredState = false;
+
+        // Stop metamorphosis and close rectangle via scroll-owned reset
+        resetCapture();
+        if (window.stopMetamorphosis) {
+          window.stopMetamorphosis();
+        }
+
+        // Hide metamorphosis canvas + rectangle immediately
+        if (metaCanvas) {
+          metaCanvas.style.opacity = '0';
+        }
+        if (periodRectSvg) {
+          periodRectSvg.style.opacity = '';  // restore CSS control
+        }
+
+        // Re-initialize video reveal if not already running
+        if (!window.__heroVideoReveal) {
+          const playlistAttr = hero.dataset.videoPlaylist || '';
+          const videoPlaylist = playlistAttr ? playlistAttr.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+          const instance = initHeroVideoReveal({
+            heroSelector: '.section--hero',
+            videoSrc: hero.dataset.videoSrc || 'assets/videos/dem-loop-08.webm',
+            fallbackSrc: hero.dataset.fallbackSrc || 'assets/videos/dem-loop-08.mp4',
+            videoPlaylist,
+            revealRadius: parseInt(hero.dataset.revealRadius, 10) || 180,
+            edgeSoftness: parseInt(hero.dataset.edgeSoftness, 10) || 50,
+            opacity: parseFloat(hero.dataset.videoOpacity) || 0.95
+          });
+
+          if (instance) {
+            window.__heroVideoReveal = instance;
+            const canvas = hero.querySelector('canvas');
+            if (canvas) {
+              canvas.style.transition = 'opacity 0.3s ease-in';
+              canvas.style.opacity = '1';
+            }
+          }
+        }
+
+        console.log('[HeroScrollTrigger] Reset - video reveal restored');
+      }
+
+      // --- RELEASE CURSOR when hero scrolls fully off-screen ---
+      if (isTriggeredState && progress >= 1.0) {
+        resetCapture(); // Frees cursor from period lock (early-returns if already released)
+      }
+
+      // --- SCROLL-TIED OPACITY FADE based on about section proximity ---
+      if (isTriggeredState && metaCanvas && aboutContent) {
+        const aboutRect = aboutContent.getBoundingClientRect();
+        const vh = window.innerHeight;
+
+        // Safe zone: about content top is below 75% of viewport height
+        // Danger zone: about content top is at or above 50% of viewport height
+        const safeThreshold = vh * 0.75;
+        const dangerThreshold = vh * 0.50;
+
+        let opacity;
+        if (aboutRect.top >= safeThreshold) {
+          opacity = 1;
+        } else if (aboutRect.top <= dangerThreshold) {
+          opacity = 0;
+        } else {
+          opacity = (aboutRect.top - dangerThreshold) / (safeThreshold - dangerThreshold);
+          opacity = Math.max(0, Math.min(1, opacity));
+        }
+
+        // Apply to both metamorphosis canvas AND period rectangle SVG
+        metaCanvas.style.opacity = String(opacity);
+        if (periodRectSvg) {
+          periodRectSvg.style.opacity = String(opacity);
+        }
+      }
+    }
+
+    // Listen for scroll (RAF-throttled)
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          checkHeroScroll();
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    }, { passive: true });
+
+    // Initialize on DOM ready
+    function init() {
+      initRefs();
+      checkHeroScroll();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
   </script>
 
   <!-- POINT Semantic Animation: Collapse to dot (SCROLL-TIED) -->
@@ -1607,7 +1754,7 @@
     });
   </script>
 
-  <!-- Hero Text Emergence Animation -->
+  <!-- Hero Text Emergence Animation (DISABLED - using video-reveal instead)
   <script type="module">
     import { initHeroEmergence } from './js/hero-emergence/index.js';
 
@@ -1618,5 +1765,6 @@
       initHeroEmergence();
     }
   </script>
+  -->
 </body>
 </html>

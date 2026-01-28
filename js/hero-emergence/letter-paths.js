@@ -10,9 +10,9 @@ const DEFAULT_CONFIG = {
   fontFamily: 'Satoshi, sans-serif',
   fontWeight: '700',
   letterSpacing: -0.02, // Tighter tracking for display text (matches premium typography)
-  samplingDensity: 1, // Sample every pixel (lower = more points, denser letterforms)
-  minPointsPerLetter: 350,
-  maxPointsPerLetter: 500,
+  samplingDensity: 1, // Sample every pixel for maximum density
+  minPointsPerLetter: 800,
+  maxPointsPerLetter: 1200,
 };
 
 /**

@@ -312,7 +312,7 @@ body {
 }
 
 
-/* Fallback title - hidden when JS/video works */
+/* Fallback title - hidden when JS/emergence works */
 .hero-title--fallback {
   display: none;
 }
