@@ -81,20 +81,29 @@ function initScrollTrigger() {
     return;
   }
 
-  scrollTriggerInstance = ScrollTrigger.create({
+  // Detect mobile/touch devices
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const isMobileOrTouch = isMobile || isTouch;
+
+  // Get responsive scroll config based on viewport
+  const responsiveConfig = CONFIG.getScrollConfig ? CONFIG.getScrollConfig() : {
+    scrollDistance: CONFIG.scrollDistance,
+    scrubSmoothing: CONFIG.scrubSmoothing
+  };
+
+  // Adjust scrub smoothing for mobile (more responsive)
+  const scrubValue = isMobileOrTouch ? Math.min(0.5, responsiveConfig.scrubSmoothing) : responsiveConfig.scrubSmoothing;
+
+  // Build ScrollTrigger config
+  const scrollConfig = {
     trigger: container,
     start: 'top top',
-    end: '+=' + CONFIG.scrollDistance,
-    scrub: CONFIG.scrubSmoothing,
+    end: '+=' + responsiveConfig.scrollDistance,
+    scrub: scrubValue,
     pin: true,
     anticipatePin: 1,
     animation: masterTimeline,
-    snap: {
-      snapTo: 'labels',
-      duration: { min: 0.2, max: 0.5 },
-      delay: 0,
-      ease: 'power1.inOut'
-    },
     onUpdate: (self) => {
       // Optional: track scroll progress
       // console.log('Progress:', self.progress.toFixed(3));
@@ -111,7 +120,24 @@ function initScrollTrigger() {
     onLeaveBack: () => {
       // Scrolled back before animation
     }
-  });
+  };
+
+  // Only add snap on desktop - can feel jarring on mobile touch
+  if (!isMobileOrTouch) {
+    scrollConfig.snap = {
+      snapTo: 'labels',
+      duration: { min: 0.2, max: 0.5 },
+      delay: 0,
+      ease: 'power1.inOut'
+    };
+  }
+
+  scrollTriggerInstance = ScrollTrigger.create(scrollConfig);
+
+  // Log device detection for debugging
+  if (isMobileOrTouch) {
+    console.log('Blueprint: Mobile/touch mode enabled (snap disabled, reduced scrub)');
+  }
 
   return scrollTriggerInstance;
 }

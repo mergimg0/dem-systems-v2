@@ -96,7 +96,7 @@
 
 .blueprint-title {
   position: absolute;
-  top: 40px;
+  top: 140px;
   left: 100px;
   opacity: 0;
 }
@@ -461,10 +461,102 @@
   }
 }
 
-@media (max-width: 768px) {
+/* Tablet adjustments */
+@media (max-width: 1024px) {
   .blueprint-canvas {
-    /* Mobile: Slightly smaller scale for padding */
-    transform: translate(-50%, -50%) scale(calc(100vw / 1920 * 0.95));
+    transform: translate(-50%, -50%) scale(min(
+      calc(100vw / 1920 * 1.05),
+      calc(100vh / 1080 * 0.9)
+    ));
+  }
+
+  .blueprint-title {
+    left: 60px;
+  }
+
+  .timeline-marker {
+    left: 60px;
+  }
+}
+
+/* Large phones */
+@media (max-width: 768px) {
+  .blueprint-scroll-container {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+  }
+
+  .blueprint-canvas {
+    /* Use height-based scaling to prevent content overflow */
+    transform: translate(-50%, -50%) scale(min(
+      calc(100vw / 1920 * 1.1),
+      calc(100vh / 1080 * 0.85)
+    ));
+  }
+
+  .blueprint-title {
+    top: 100px;
+    left: 40px;
+  }
+
+  .title-main {
+    font-size: 28px;
+  }
+
+  .timeline-marker {
+    left: 40px;
+  }
+
+  /* Tighten callout connectors on mobile */
+  .callout-connector {
+    width: 100px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .blueprint-canvas {
+    transform: translate(-50%, -50%) scale(min(
+      calc(100vw / 1920 * 1.15),
+      calc(100vh / 1080 * 0.75)
+    ));
+  }
+
+  .blueprint-title {
+    top: 80px;
+    left: 24px;
+  }
+
+  .title-main {
+    font-size: 24px;
+  }
+
+  .timeline-marker {
+    left: 24px;
+  }
+
+  .callout-connector {
+    width: 80px;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .blueprint-scroll-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .blueprint-canvas {
+    /* In landscape, favor width-based scaling */
+    transform: translate(-50%, -50%) scale(min(
+      calc(100vw / 1920 * 0.95),
+      calc(100vh / 1080 * 1.1)
+    ));
+  }
+
+  .blueprint-title {
+    top: 60px;
   }
 }
 
