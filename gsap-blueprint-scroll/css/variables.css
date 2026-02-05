@@ -1,0 +1,96 @@
+/**
+ * Blueprint Machine - CSS Variables
+ * Color palette and dimensions from Remotion implementation
+ */
+
+:root {
+  /* ========================================
+     BACKGROUND COLORS
+     ======================================== */
+  --bg-white: #FAFAFA;
+  --bg-warm: #F5F5F4;
+
+  /* ========================================
+     BLUEPRINT NAVY GRADIENT
+     (from dark to light)
+     ======================================== */
+  --navy-dark: #1e3a5f;      /* Primary text, layer strokes */
+  --navy-mid: #2d5a87;       /* Secondary elements, cursor, arrow */
+  --navy-light: #4a7ba7;     /* Grid lines (mid) */
+  --navy-faint: #a8c5db;     /* Grid lines (light), crosshairs */
+  --navy-ghost: #d4e4ed;     /* Grid line ends (fade to transparent) */
+
+  /* ========================================
+     ACCENTS
+     ======================================== */
+  --accent-warm: #c45d35;    /* Decision diamond, browser dots */
+  --accent-slate: #64748b;
+
+  /* ========================================
+     TEXT COLORS
+     ======================================== */
+  --text-dark: #0f172a;      /* Title text */
+  --text-mid: #475569;       /* Tagline */
+  --text-light: #94a3b8;     /* Sublabels */
+
+  /* ========================================
+     LAYER COLORS
+     ======================================== */
+  --layer-fill: rgba(30, 58, 95, 0.03);
+  --layer-stroke: #1e3a5f;
+
+  /* ========================================
+     DIMENSIONS
+     ======================================== */
+  --canvas-width: 1920px;
+  --canvas-height: 1080px;
+  --grid-spacing: 60px;
+  --layer-spacing: 70px;
+  --layer-width: 320px;
+  --layer-height: 180px;
+  --layer-depth: 20px;
+  --callout-line-width: 120px;
+  --arrow-width: 24px;
+  --arrow-height: 60px;
+
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+  --font-primary: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Font sizes */
+  --font-size-logo: 36px;
+  --font-size-tagline: 20px;
+  --font-size-sentence: 32px;
+  --font-size-marker-label: 14px;
+  --font-size-callout-number: 14px;
+  --font-size-callout-label: 16px;
+  --font-size-callout-sublabel: 12px;
+
+  /* Font weights */
+  --font-weight-light: 200;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ========================================
+     POSITIONS (as percentages)
+     ======================================== */
+  --center-x: 35.5%;
+  --center-y: 36%;
+  --logo-x: 50%;
+  --logo-y: 50%;
+  --callout-x: 64.7%;
+
+  /* Timeline marker Y positions */
+  --marker-y-1: 35%;
+  --marker-y-2: 50%;
+  --marker-y-3: 65%;
+
+  /* ========================================
+     ANIMATION
+     ======================================== */
+  --scroll-distance: 200vh;
+  --scrub-smoothing: 1s;
+}

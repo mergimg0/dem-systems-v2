@@ -1,0 +1,24 @@
+{
+  "name": "remotion-blueprint",
+  "version": "1.0.0",
+  "description": "DEM Systems Blueprint Machine Animation",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render BlueprintMachine out/blueprint.mp4",
+    "build:gif": "remotion render BlueprintMachine out/blueprint.gif --image-format=png",
+    "build:square": "remotion render BlueprintMachine-Square out/blueprint-square.mp4",
+    "preview": "remotion preview"
+  },
+  "keywords": ["remotion", "animation", "blueprint"],
+  "author": "DEM Systems",
+  "license": "ISC",
+  "dependencies": {
+    "@remotion/cli": "^4.0.417",
+    "@remotion/player": "^4.0.417",
+    "@types/react": "^19.2.10",
+        "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remotion": "^4.0.417",
+    "typescript": "^5.9.3"
+  }
+}

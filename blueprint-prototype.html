@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blueprint Machine - DEM Systems Prototype</title>
+
+  <!-- Satoshi Font -->
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #FAFAFA;
+      --line-primary: #0A0A0A;
+      --line-secondary: #717171;
+      --fill-layer: #F0F0F0;
+      --accent: #0A0A0A;
+      --font: 'Satoshi', -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    .prototype-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .prototype-header h1 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    .prototype-header p {
+      color: var(--line-secondary);
+      font-size: 0.875rem;
+    }
+
+    /* Blueprint Container */
+    .blueprint-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* SVG Blueprint */
+    .blueprint-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Grid lines */
+    .grid-line {
+      stroke: #E8E8E8;
+      stroke-width: 0.5;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+    }
+
+    /* Layers */
+    .layer {
+      fill: var(--fill-layer);
+      stroke: var(--line-primary);
+      stroke-width: 1.5;
+      opacity: 0;
+      transform-origin: center;
+    }
+
+    .layer-shadow {
+      fill: rgba(0,0,0,0.05);
+      stroke: none;
+    }
+
+    /* Callout lines and text */
+    .callout-line {
+      stroke: var(--line-secondary);
+      stroke-width: 1;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+
+    .callout-dot {
+      fill: var(--line-primary);
+      opacity: 0;
+    }
+
+    .callout-text {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 500;
+      fill: var(--line-secondary);
+      opacity: 0;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .callout-number {
+      font-family: var(--font);
+      font-size: 9px;
+      font-weight: 600;
+      fill: var(--line-primary);
+      opacity: 0;
+    }
+
+    /* Timeline indicators */
+    .timeline-text {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      fill: var(--line-primary);
+      opacity: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .timeline-subtext {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 400;
+      fill: var(--line-secondary);
+      opacity: 0;
+    }
+
+    /* Connection lines between layers */
+    .connection-line {
+      stroke: var(--line-secondary);
+      stroke-width: 1;
+      stroke-dasharray: 4 4;
+      stroke-dashoffset: 100;
+      opacity: 0;
+    }
+
+    /* Center core (represents the unified system) */
+    .core {
+      fill: var(--line-primary);
+      opacity: 0;
+      transform-origin: center;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .control-btn {
+      font-family: var(--font);
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid var(--line-primary);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .control-btn:hover {
+      background: var(--line-primary);
+      color: var(--bg);
+    }
+
+    .control-btn.primary {
+      background: var(--line-primary);
+      color: var(--bg);
+    }
+
+    .control-btn.primary:hover {
+      background: transparent;
+      color: var(--line-primary);
+    }
+
+    /* Progress indicator */
+    .progress-container {
+      margin-top: 1.5rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .progress-bar {
+      height: 2px;
+      background: #E8E8E8;
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--line-primary);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--line-secondary);
+    }
+
+    /* Scrub slider */
+    .scrub-container {
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .scrub-slider {
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #E8E8E8;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .scrub-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--line-primary);
+      border-radius: 50%;
+      cursor: grab;
+    }
+
+    .scrub-slider::-webkit-slider-thumb:active {
+      cursor: grabbing;
+    }
+
+    .scrub-label {
+      text-align: center;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--line-secondary);
+    }
+
+    /* Phase indicator */
+    .phase-indicator {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .phase-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--line-primary);
+    }
+
+    .phase-description {
+      font-size: 0.875rem;
+      color: var(--line-secondary);
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="prototype-header">
+    <h1>The Blueprint Machine</h1>
+    <p>Concept 1 Prototype - Interactive Exploded View</p>
+  </div>
+
+  <div class="blueprint-container">
+    <svg class="blueprint-svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <!-- Drop shadow filter -->
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.1"/>
+        </filter>
+
+        <!-- Subtle glow for connections -->
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Background Grid -->
+      <g class="grid-group">
+        <!-- Horizontal lines -->
+        <line class="grid-line" x1="50" y1="100" x2="750" y2="100"/>
+        <line class="grid-line" x1="50" y1="200" x2="750" y2="200"/>
+        <line class="grid-line" x1="50" y1="300" x2="750" y2="300"/>
+        <line class="grid-line" x1="50" y1="400" x2="750" y2="400"/>
+        <line class="grid-line" x1="50" y1="500" x2="750" y2="500"/>
+        <!-- Vertical lines -->
+        <line class="grid-line" x1="150" y1="50" x2="150" y2="550"/>
+        <line class="grid-line" x1="300" y1="50" x2="300" y2="550"/>
+        <line class="grid-line" x1="450" y1="50" x2="450" y2="550"/>
+        <line class="grid-line" x1="600" y1="50" x2="600" y2="550"/>
+      </g>
+
+      <!-- LAYERS (Isometric stacked rectangles) -->
+      <!-- Layer shadows (drawn first, behind) -->
+      <g class="shadows-group">
+        <path class="layer-shadow layer-shadow-1" d="M260,380 L420,300 L560,380 L400,460 Z" transform="translate(5, 5)"/>
+        <path class="layer-shadow layer-shadow-2" d="M260,330 L420,250 L560,330 L400,410 Z" transform="translate(5, 5)"/>
+        <path class="layer-shadow layer-shadow-3" d="M260,280 L420,200 L560,280 L400,360 Z" transform="translate(5, 5)"/>
+        <path class="layer-shadow layer-shadow-4" d="M260,230 L420,150 L560,230 L400,310 Z" transform="translate(5, 5)"/>
+      </g>
+
+      <!-- Layer 4: Integrations (top) -->
+      <g class="layer-group layer-4-group">
+        <path class="layer layer-4" d="M260,230 L420,150 L560,230 L400,310 Z" filter="url(#shadow)"/>
+        <!-- Layer top face detail -->
+        <path class="layer-detail" d="M280,235 L400,170 L520,235 L400,300 Z" fill="none" stroke="#D0D0D0" stroke-width="0.5" opacity="0"/>
+        <!-- Small integration icons -->
+        <circle class="layer-icon" cx="360" cy="225" r="8" fill="none" stroke="#A0A0A0" stroke-width="1" opacity="0"/>
+        <circle class="layer-icon" cx="400" cy="205" r="8" fill="none" stroke="#A0A0A0" stroke-width="1" opacity="0"/>
+        <circle class="layer-icon" cx="440" cy="225" r="8" fill="none" stroke="#A0A0A0" stroke-width="1" opacity="0"/>
+      </g>
+
+      <!-- Layer 3: Interface (UI) -->
+      <g class="layer-group layer-3-group">
+        <path class="layer layer-3" d="M260,280 L420,200 L560,280 L400,360 Z" filter="url(#shadow)"/>
+        <!-- UI wireframe elements -->
+        <rect class="layer-ui" x="340" y="260" width="60" height="8" fill="none" stroke="#B0B0B0" stroke-width="1" rx="1" opacity="0"/>
+        <rect class="layer-ui" x="340" y="275" width="40" height="6" fill="none" stroke="#B0B0B0" stroke-width="1" rx="1" opacity="0"/>
+        <rect class="layer-ui" x="390" y="275" width="30" height="6" fill="#D0D0D0" stroke="none" rx="1" opacity="0"/>
+      </g>
+
+      <!-- Layer 2: Business Logic -->
+      <g class="layer-group layer-2-group">
+        <path class="layer layer-2" d="M260,330 L420,250 L560,330 L400,410 Z" filter="url(#shadow)"/>
+        <!-- Logic flow indicators -->
+        <path class="layer-logic" d="M340,330 L370,315 L400,330 L430,315 L460,330" fill="none" stroke="#B0B0B0" stroke-width="1" opacity="0"/>
+        <circle class="layer-logic-node" cx="370" cy="315" r="4" fill="#D0D0D0" stroke="#B0B0B0" stroke-width="1" opacity="0"/>
+        <circle class="layer-logic-node" cx="430" cy="315" r="4" fill="#D0D0D0" stroke="#B0B0B0" stroke-width="1" opacity="0"/>
+      </g>
+
+      <!-- Layer 1: Data Model (bottom) -->
+      <g class="layer-group layer-1-group">
+        <path class="layer layer-1" d="M260,380 L420,300 L560,380 L400,460 Z" filter="url(#shadow)"/>
+        <!-- Database cylinders -->
+        <ellipse class="layer-db" cx="370" cy="385" rx="15" ry="8" fill="none" stroke="#B0B0B0" stroke-width="1" opacity="0"/>
+        <ellipse class="layer-db" cx="430" cy="385" rx="15" ry="8" fill="none" stroke="#B0B0B0" stroke-width="1" opacity="0"/>
+        <line class="layer-db-line" x1="370" y1="385" x2="430" y2="385" stroke="#B0B0B0" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+      </g>
+
+      <!-- Connection lines between layers (drawn when collapsing) -->
+      <g class="connections-group">
+        <line class="connection-line conn-1-2" x1="400" y1="380" x2="400" y2="330"/>
+        <line class="connection-line conn-2-3" x1="400" y1="330" x2="400" y2="280"/>
+        <line class="connection-line conn-3-4" x1="400" y1="280" x2="400" y2="230"/>
+      </g>
+
+      <!-- Central Core (appears when collapsed) -->
+      <g class="core-group">
+        <circle class="core core-outer" cx="400" cy="305" r="40" fill="none" stroke="#0A0A0A" stroke-width="2"/>
+        <circle class="core core-inner" cx="400" cy="305" r="20"/>
+        <text class="core-text" x="400" y="310" text-anchor="middle" font-family="Satoshi, sans-serif" font-size="10" font-weight="600" fill="#FAFAFA" opacity="0">DEM</text>
+      </g>
+
+      <!-- CALLOUTS -->
+      <!-- Layer 1 Callout (Data) -->
+      <g class="callout callout-1">
+        <line class="callout-line" x1="560" y1="380" x2="650" y2="420"/>
+        <circle class="callout-dot" cx="560" cy="380" r="3"/>
+        <text class="callout-number" x="655" y="408">01</text>
+        <text class="callout-text" x="655" y="422">Data Model</text>
+        <text class="timeline-subtext" x="655" y="436">Database architecture</text>
+      </g>
+
+      <!-- Layer 2 Callout (Logic) -->
+      <g class="callout callout-2">
+        <line class="callout-line" x1="560" y1="330" x2="650" y2="330"/>
+        <circle class="callout-dot" cx="560" cy="330" r="3"/>
+        <text class="callout-number" x="655" y="318">02</text>
+        <text class="callout-text" x="655" y="332">Business Logic</text>
+        <text class="timeline-subtext" x="655" y="346">Core processing</text>
+      </g>
+
+      <!-- Layer 3 Callout (Interface) -->
+      <g class="callout callout-3">
+        <line class="callout-line" x1="560" y1="280" x2="650" y2="240"/>
+        <circle class="callout-dot" cx="560" cy="280" r="3"/>
+        <text class="callout-number" x="655" y="228">03</text>
+        <text class="callout-text" x="655" y="242">Interface</text>
+        <text class="timeline-subtext" x="655" y="256">User experience</text>
+      </g>
+
+      <!-- Layer 4 Callout (Integrations) -->
+      <g class="callout callout-4">
+        <line class="callout-line" x1="560" y1="230" x2="650" y2="150"/>
+        <circle class="callout-dot" cx="560" cy="230" r="3"/>
+        <text class="callout-number" x="655" y="138">04</text>
+        <text class="callout-text" x="655" y="152">Integrations</text>
+        <text class="timeline-subtext" x="655" y="166">External systems</text>
+      </g>
+
+      <!-- Timeline Indicators (left side) -->
+      <g class="timeline timeline-discovery">
+        <text class="timeline-text" x="80" y="180">30 min</text>
+        <text class="timeline-subtext" x="80" y="196">Discovery</text>
+      </g>
+
+      <g class="timeline timeline-build">
+        <text class="timeline-text" x="80" y="300">6 hours</text>
+        <text class="timeline-subtext" x="80" y="316">V1 Build</text>
+      </g>
+
+      <g class="timeline timeline-delivery">
+        <text class="timeline-text" x="80" y="420">7 days</text>
+        <text class="timeline-subtext" x="80" y="436">Production</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Phase Indicator -->
+  <div class="phase-indicator">
+    <div class="phase-name" id="phase-name">Ready</div>
+    <div class="phase-description" id="phase-description">Click Play or drag the scrubber</div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-labels">
+      <span>Discovery</span>
+      <span>Construction</span>
+      <span>Integration</span>
+    </div>
+  </div>
+
+  <!-- Scrub Slider -->
+  <div class="scrub-container">
+    <input type="range" class="scrub-slider" id="scrub-slider" min="0" max="100" value="0">
+    <div class="scrub-label">Drag to scrub through animation</div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="control-btn primary" id="play-btn">Play</button>
+    <button class="control-btn" id="reset-btn">Reset</button>
+    <button class="control-btn" id="expand-btn">Expand</button>
+    <button class="control-btn" id="collapse-btn">Collapse</button>
+  </div>
+
+  <!-- Anime.js -->
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+
+  <script>
+    // Blueprint Machine Animation Controller
+    const BlueprintMachine = {
+      timeline: null,
+      isPlaying: false,
+      duration: 6000, // 6 seconds total
+
+      // Phase definitions
+      phases: [
+        { name: 'Discovery', description: 'Understanding your challenge', start: 0, end: 0.2 },
+        { name: 'Layer 1: Data', description: 'Database architecture emerges', start: 0.2, end: 0.35 },
+        { name: 'Layer 2: Logic', description: 'Business logic takes shape', start: 0.35, end: 0.5 },
+        { name: 'Layer 3: Interface', description: 'User experience materializes', start: 0.5, end: 0.65 },
+        { name: 'Layer 4: Integrations', description: 'External connections form', start: 0.65, end: 0.8 },
+        { name: 'Integration', description: 'System unifies into production', start: 0.8, end: 1 }
+      ],
+
+      init() {
+        this.createTimeline();
+        this.bindControls();
+        this.bindScrubber();
+      },
+
+      createTimeline() {
+        this.timeline = anime.timeline({
+          autoplay: false,
+          easing: 'easeOutQuad',
+          update: (anim) => {
+            const progress = anim.progress / 100;
+            document.getElementById('progress-fill').style.width = `${anim.progress}%`;
+            this.updatePhaseIndicator(progress);
+          }
+        });
+
+        // ===== PHASE 1: DISCOVERY (0-1200ms) =====
+        // Grid lines draw in
+        this.timeline.add({
+          targets: '.grid-line',
+          strokeDashoffset: [1000, 0],
+          duration: 800,
+          delay: anime.stagger(50),
+          easing: 'easeInOutQuad'
+        }, 0);
+
+        // Discovery timeline text
+        this.timeline.add({
+          targets: '.timeline-discovery .timeline-text, .timeline-discovery .timeline-subtext',
+          opacity: [0, 1],
+          translateX: [-20, 0],
+          duration: 400,
+          delay: anime.stagger(100),
+          easing: 'easeOutQuad'
+        }, 400);
+
+        // ===== PHASE 2: LAYER 1 - DATA (1200-2100ms) =====
+        this.timeline.add({
+          targets: '.layer-1',
+          opacity: [0, 1],
+          translateY: [50, 0],
+          duration: 500,
+          easing: 'easeOutBack'
+        }, 1200);
+
+        // Layer 1 details
+        this.timeline.add({
+          targets: '.layer-db, .layer-db-line',
+          opacity: [0, 1],
+          duration: 300
+        }, 1500);
+
+        // Callout 1
+        this.timeline.add({
+          targets: '.callout-1 .callout-line',
+          strokeDashoffset: [100, 0],
+          duration: 300,
+          easing: 'easeOutQuad'
+        }, 1600);
+
+        this.timeline.add({
+          targets: '.callout-1 .callout-dot, .callout-1 .callout-number, .callout-1 .callout-text, .callout-1 .timeline-subtext',
+          opacity: [0, 1],
+          duration: 200,
+          delay: anime.stagger(50)
+        }, 1700);
+
+        // ===== PHASE 3: LAYER 2 - LOGIC (2100-3000ms) =====
+        this.timeline.add({
+          targets: '.layer-2',
+          opacity: [0, 1],
+          translateY: [50, 0],
+          duration: 500,
+          easing: 'easeOutBack'
+        }, 2100);
+
+        // Layer 2 details
+        this.timeline.add({
+          targets: '.layer-logic, .layer-logic-node',
+          opacity: [0, 1],
+          duration: 300
+        }, 2400);
+
+        // Callout 2
+        this.timeline.add({
+          targets: '.callout-2 .callout-line',
+          strokeDashoffset: [100, 0],
+          duration: 300
+        }, 2500);
+
+        this.timeline.add({
+          targets: '.callout-2 .callout-dot, .callout-2 .callout-number, .callout-2 .callout-text, .callout-2 .timeline-subtext',
+          opacity: [0, 1],
+          duration: 200,
+          delay: anime.stagger(50)
+        }, 2600);
+
+        // Build timeline text
+        this.timeline.add({
+          targets: '.timeline-build .timeline-text, .timeline-build .timeline-subtext',
+          opacity: [0, 1],
+          translateX: [-20, 0],
+          duration: 400,
+          delay: anime.stagger(100)
+        }, 2400);
+
+        // ===== PHASE 4: LAYER 3 - INTERFACE (3000-3900ms) =====
+        this.timeline.add({
+          targets: '.layer-3',
+          opacity: [0, 1],
+          translateY: [50, 0],
+          duration: 500,
+          easing: 'easeOutBack'
+        }, 3000);
+
+        // Layer 3 details (UI elements)
+        this.timeline.add({
+          targets: '.layer-ui',
+          opacity: [0, 1],
+          duration: 300
+        }, 3300);
+
+        // Callout 3
+        this.timeline.add({
+          targets: '.callout-3 .callout-line',
+          strokeDashoffset: [100, 0],
+          duration: 300
+        }, 3400);
+
+        this.timeline.add({
+          targets: '.callout-3 .callout-dot, .callout-3 .callout-number, .callout-3 .callout-text, .callout-3 .timeline-subtext',
+          opacity: [0, 1],
+          duration: 200,
+          delay: anime.stagger(50)
+        }, 3500);
+
+        // ===== PHASE 5: LAYER 4 - INTEGRATIONS (3900-4800ms) =====
+        this.timeline.add({
+          targets: '.layer-4',
+          opacity: [0, 1],
+          translateY: [50, 0],
+          duration: 500,
+          easing: 'easeOutBack'
+        }, 3900);
+
+        // Layer 4 details (icons)
+        this.timeline.add({
+          targets: '.layer-icon',
+          opacity: [0, 1],
+          scale: [0.5, 1],
+          duration: 300,
+          delay: anime.stagger(100)
+        }, 4200);
+
+        // Callout 4
+        this.timeline.add({
+          targets: '.callout-4 .callout-line',
+          strokeDashoffset: [100, 0],
+          duration: 300
+        }, 4300);
+
+        this.timeline.add({
+          targets: '.callout-4 .callout-dot, .callout-4 .callout-number, .callout-4 .callout-text, .callout-4 .timeline-subtext',
+          opacity: [0, 1],
+          duration: 200,
+          delay: anime.stagger(50)
+        }, 4400);
+
+        // ===== PHASE 6: INTEGRATION - COLLAPSE (4800-6000ms) =====
+        // Delivery timeline text
+        this.timeline.add({
+          targets: '.timeline-delivery .timeline-text, .timeline-delivery .timeline-subtext',
+          opacity: [0, 1],
+          translateX: [-20, 0],
+          duration: 400,
+          delay: anime.stagger(100)
+        }, 4800);
+
+        // Layers collapse toward center
+        this.timeline.add({
+          targets: '.layer-4',
+          translateY: [0, 75],
+          duration: 600,
+          easing: 'easeInOutQuad'
+        }, 5000);
+
+        this.timeline.add({
+          targets: '.layer-3',
+          translateY: [0, 25],
+          duration: 600,
+          easing: 'easeInOutQuad'
+        }, 5000);
+
+        this.timeline.add({
+          targets: '.layer-2',
+          translateY: [0, -25],
+          duration: 600,
+          easing: 'easeInOutQuad'
+        }, 5000);
+
+        this.timeline.add({
+          targets: '.layer-1',
+          translateY: [0, -75],
+          duration: 600,
+          easing: 'easeInOutQuad'
+        }, 5000);
+
+        // Connection lines appear
+        this.timeline.add({
+          targets: '.connection-line',
+          opacity: [0, 0.6],
+          strokeDashoffset: [100, 0],
+          duration: 400,
+          delay: anime.stagger(100)
+        }, 5200);
+
+        // Core appears
+        this.timeline.add({
+          targets: '.core-outer',
+          opacity: [0, 1],
+          scale: [0.5, 1],
+          duration: 400,
+          easing: 'easeOutBack'
+        }, 5400);
+
+        this.timeline.add({
+          targets: '.core-inner',
+          opacity: [0, 1],
+          scale: [0, 1],
+          duration: 300,
+          easing: 'easeOutBack'
+        }, 5500);
+
+        this.timeline.add({
+          targets: '.core-text',
+          opacity: [0, 1],
+          duration: 200
+        }, 5700);
+      },
+
+      updatePhaseIndicator(progress) {
+        const phase = this.phases.find(p => progress >= p.start && progress < p.end) || this.phases[this.phases.length - 1];
+        document.getElementById('phase-name').textContent = phase.name;
+        document.getElementById('phase-description').textContent = phase.description;
+      },
+
+      bindControls() {
+        document.getElementById('play-btn').addEventListener('click', () => this.play());
+        document.getElementById('reset-btn').addEventListener('click', () => this.reset());
+        document.getElementById('expand-btn').addEventListener('click', () => this.expand());
+        document.getElementById('collapse-btn').addEventListener('click', () => this.collapse());
+      },
+
+      bindScrubber() {
+        const scrubber = document.getElementById('scrub-slider');
+
+        scrubber.addEventListener('input', (e) => {
+          this.timeline.pause();
+          this.isPlaying = false;
+          document.getElementById('play-btn').textContent = 'Play';
+
+          const progress = e.target.value / 100;
+          this.timeline.seek(this.timeline.duration * progress);
+        });
+      },
+
+      play() {
+        if (this.isPlaying) {
+          this.timeline.pause();
+          this.isPlaying = false;
+          document.getElementById('play-btn').textContent = 'Play';
+        } else {
+          if (this.timeline.progress === 100) {
+            this.timeline.seek(0);
+          }
+          this.timeline.play();
+          this.isPlaying = true;
+          document.getElementById('play-btn').textContent = 'Pause';
+
+          // Sync scrubber during playback
+          const syncScrubber = () => {
+            if (this.isPlaying) {
+              document.getElementById('scrub-slider').value = this.timeline.progress;
+              if (this.timeline.progress < 100) {
+                requestAnimationFrame(syncScrubber);
+              } else {
+                this.isPlaying = false;
+                document.getElementById('play-btn').textContent = 'Play';
+              }
+            }
+          };
+          requestAnimationFrame(syncScrubber);
+        }
+      },
+
+      reset() {
+        this.timeline.pause();
+        this.timeline.seek(0);
+        this.isPlaying = false;
+        document.getElementById('play-btn').textContent = 'Play';
+        document.getElementById('scrub-slider').value = 0;
+        document.getElementById('phase-name').textContent = 'Ready';
+        document.getElementById('phase-description').textContent = 'Click Play or drag the scrubber';
+      },
+
+      expand() {
+        // Jump to fully expanded state (just before collapse)
+        this.timeline.pause();
+        this.timeline.seek(this.timeline.duration * 0.8);
+        this.isPlaying = false;
+        document.getElementById('play-btn').textContent = 'Play';
+        document.getElementById('scrub-slider').value = 80;
+      },
+
+      collapse() {
+        // Jump to collapsed state
+        this.timeline.pause();
+        this.timeline.seek(this.timeline.duration);
+        this.isPlaying = false;
+        document.getElementById('play-btn').textContent = 'Play';
+        document.getElementById('scrub-slider').value = 100;
+      }
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      BlueprintMachine.init();
+    });
+  </script>
+</body>
+</html>

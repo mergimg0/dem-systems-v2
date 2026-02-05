@@ -34,6 +34,10 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/main.css">
 
+  <!-- Blueprint Section Styles -->
+  <link rel="stylesheet" href="gsap-blueprint-scroll/css/variables.css">
+  <link rel="stylesheet" href="gsap-blueprint-scroll/css/blueprint.css">
+
   <!-- Semantic Animation Styles -->
   <style>
     /* Smooth scrolling */
@@ -219,20 +223,13 @@
       </a>
       <ul class="nav__links">
         <li><a href="#about" class="nav__link" data-text="About">About</a></li>
+        <li><a href="#blueprint" class="nav__link" data-text="Blueprint">Blueprint</a></li>
         <li><a href="#contact" class="nav__link" data-text="Contact">Contact</a></li>
       </ul>
     </nav>
   </header>
   <!-- Blackout overlay - paints from top of viewport, inverts everything via blend mode -->
   <div class="blackout-overlay" aria-hidden="true"></div>
-
-  <!-- Period Rectangle SVG Overlay - draws on magnetic cursor capture -->
-  <svg class="period-rect-svg" id="period-rect-svg" aria-hidden="true">
-    <rect class="period-rect-path" id="period-rect-path" rx="4"/>
-  </svg>
-
-  <!-- Metamorphosis Canvas - 8-phase animation triggered by period capture -->
-  <canvas id="metamorphosis-canvas" aria-hidden="true"></canvas>
 
   <!-- WebGL Thread Canvas (disabled until rope finessed) -->
   <!-- <canvas id="thread-canvas" aria-hidden="true"></canvas> -->
@@ -263,7 +260,7 @@
         <!-- Secondary tagline with typewriter effect -->
         <p class="hero-tagline hero-tagline--secondary hero-reveal" style="--reveal-delay: 300ms;">
           <span class="typewriter">
-            <span class="typewriter__text"></span><span class="period-trigger" id="period-trigger">.</span>
+            <span class="typewriter__text"></span><span>.</span>
             <span class="typewriter__cursor typewriter__cursor--blink">|</span>
           </span>
         </p>
@@ -286,6 +283,341 @@
           <p class="about-wipe">We handle the <span class="sprite-hover-trigger" data-sprite="wires" data-position="below">complex code</span> so <span class="focus-animation" id="focus-animation"><span class="focus-context">you can</span> <span class="focus-word">focus</span> <span class="focus-context">on the</span></span> work that <span class="matters-animation" id="matters-animation"><span class="matters-word">matters</span></span>.</p>
         </div>
       </div>
+    </section>
+
+    <!-- Blueprint Machine Section -->
+    <section class="blueprint-section" id="blueprint">
+      <div class="blueprint-scroll-container">
+        <div class="blueprint-canvas" id="blueprint-canvas">
+
+          <!-- SVG DEFINITIONS (Gradients) -->
+          <svg width="0" height="0" style="position: absolute;">
+            <defs>
+              <linearGradient id="navyGradientH" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#d4e4ed" stop-opacity="0" />
+                <stop offset="20%" stop-color="#a8c5db" stop-opacity="0.5" />
+                <stop offset="50%" stop-color="#4a7ba7" stop-opacity="0.6" />
+                <stop offset="80%" stop-color="#a8c5db" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#d4e4ed" stop-opacity="0" />
+              </linearGradient>
+              <linearGradient id="navyGradientV" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#d4e4ed" stop-opacity="0" />
+                <stop offset="20%" stop-color="#a8c5db" stop-opacity="0.5" />
+                <stop offset="50%" stop-color="#4a7ba7" stop-opacity="0.6" />
+                <stop offset="80%" stop-color="#a8c5db" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#d4e4ed" stop-opacity="0" />
+              </linearGradient>
+              <filter id="pulseGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <linearGradient id="overlapFade" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="white" stop-opacity="0.05" />
+                <stop offset="40%" stop-color="white" stop-opacity="0.05" />
+                <stop offset="60%" stop-color="white" stop-opacity="1" />
+                <stop offset="100%" stop-color="white" stop-opacity="1" />
+              </linearGradient>
+              <mask id="overlapMask">
+                <rect x="-300" y="-150" width="600" height="300" fill="url(#overlapFade)" />
+              </mask>
+            </defs>
+          </svg>
+
+          <!-- BLUEPRINT GRID -->
+          <svg class="blueprint-grid" id="grid" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+            <g id="h-lines"></g>
+            <g id="v-lines"></g>
+          </svg>
+
+          <!-- CROSSHAIRS -->
+          <svg class="crosshairs" id="crosshairs" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+            <line class="crosshair-line crosshair-h-left" x1="652.8" y1="540" x2="781" y2="540" />
+            <line class="crosshair-line crosshair-h-left-gap" x1="781" y1="540" x2="843.2" y2="540" />
+            <line class="crosshair-line crosshair-h-center" x1="843.2" y1="540" x2="1038.8" y2="540" />
+            <line class="crosshair-line crosshair-h-right-gap" x1="1038.8" y1="540" x2="1101" y2="540" />
+            <line class="crosshair-line crosshair-h-right" x1="1101" y1="540" x2="1228.8" y2="540" />
+            <line class="crosshair-line crosshair-v-top" x1="940.8" y1="200" x2="940.8" y2="345" />
+            <line class="crosshair-line crosshair-v-layer2" x1="940.8" y1="345" x2="940.8" y2="415" />
+            <line class="crosshair-line crosshair-v-layer3" x1="940.8" y1="415" x2="940.8" y2="485" />
+            <line class="crosshair-line crosshair-v-layer1" x1="940.8" y1="485" x2="940.8" y2="555" />
+            <line class="crosshair-line crosshair-v-layer0" x1="940.8" y1="555" x2="940.8" y2="735" />
+            <line class="crosshair-line crosshair-v-bottom" x1="940.8" y1="735" x2="940.8" y2="880" />
+          </svg>
+
+          <!-- CORNER MARKERS -->
+          <svg class="corner-markers" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+            <g class="corner-marker" id="corner-0" transform="translate(652, 210)">
+              <line x1="0" y1="12" x2="0" y2="0" /><line x1="0" y1="0" x2="12" y2="0" />
+            </g>
+            <g class="corner-marker" id="corner-1" transform="translate(1228, 210)">
+              <line x1="0" y1="12" x2="0" y2="0" /><line x1="0" y1="0" x2="-12" y2="0" />
+            </g>
+            <g class="corner-marker" id="corner-2" transform="translate(652, 870)">
+              <line x1="0" y1="-12" x2="0" y2="0" /><line x1="0" y1="0" x2="12" y2="0" />
+            </g>
+            <g class="corner-marker" id="corner-3" transform="translate(1228, 870)">
+              <line x1="0" y1="-12" x2="0" y2="0" /><line x1="0" y1="0" x2="-12" y2="0" />
+            </g>
+          </svg>
+
+          <!-- TITLE -->
+          <div class="blueprint-title" id="title">
+            <div class="title-pretitle">DEM Systems</div>
+            <div class="title-main">The Blueprint Machine</div>
+          </div>
+
+          <!-- TIMELINE MARKERS -->
+          <div class="timeline-markers" id="timeline-markers">
+            <div class="timeline-marker" id="marker-0" style="top: 35%;">
+              <div class="timeline-marker-label">30 min</div>
+              <div class="timeline-marker-sublabel">Discovery</div>
+            </div>
+            <div class="timeline-marker" id="marker-1" style="top: 50%;">
+              <div class="timeline-marker-label">24 hours</div>
+              <div class="timeline-marker-sublabel">V1 Build</div>
+            </div>
+            <div class="timeline-marker" id="marker-2" style="top: 65%;">
+              <div class="timeline-marker-label">7 days</div>
+              <div class="timeline-marker-sublabel">Production</div>
+            </div>
+          </div>
+
+          <!-- PROGRESS PULSES -->
+          <svg class="progress-pulse" id="pulse-0" viewBox="0 0 1920 1080">
+            <line class="pulse-trail" x1="180" y1="378" x2="180" y2="378" />
+            <circle class="pulse-glow" cx="180" cy="378" r="0" />
+            <circle class="pulse-core" cx="180" cy="378" r="6" />
+            <g class="pulse-impact" transform="translate(500, 378)" opacity="0">
+              <circle r="30" /><circle r="15" />
+            </g>
+          </svg>
+          <svg class="progress-pulse" id="pulse-1" viewBox="0 0 1920 1080">
+            <line class="pulse-trail" x1="180" y1="540" x2="180" y2="540" />
+            <circle class="pulse-glow" cx="180" cy="540" r="0" />
+            <circle class="pulse-core" cx="180" cy="540" r="6" />
+            <g class="pulse-impact" transform="translate(500, 540)" opacity="0">
+              <circle r="30" /><circle r="15" />
+            </g>
+          </svg>
+          <svg class="progress-pulse" id="pulse-2" viewBox="0 0 1920 1080">
+            <line class="pulse-trail" x1="180" y1="540" x2="180" y2="540" />
+            <circle class="pulse-glow" cx="180" cy="540" r="0" />
+            <circle class="pulse-core" cx="180" cy="540" r="6" />
+            <g class="pulse-impact" transform="translate(500, 540)" opacity="0">
+              <circle r="30" /><circle r="15" />
+            </g>
+          </svg>
+          <svg class="progress-pulse" id="pulse-3" viewBox="0 0 1920 1080">
+            <line class="pulse-trail" x1="180" y1="702" x2="180" y2="702" />
+            <circle class="pulse-glow" cx="180" cy="702" r="0" />
+            <circle class="pulse-core" cx="180" cy="702" r="6" />
+            <g class="pulse-impact" transform="translate(500, 702)" opacity="0">
+              <circle r="30" /><circle r="15" />
+            </g>
+          </svg>
+          <svg class="progress-pulse" id="pulse-4" viewBox="0 0 1920 1080">
+            <line class="pulse-trail" x1="180" y1="702" x2="180" y2="702" />
+            <circle class="pulse-glow" cx="180" cy="702" r="0" />
+            <circle class="pulse-core" cx="180" cy="702" r="6" />
+            <g class="pulse-impact" transform="translate(500, 702)" opacity="0">
+              <circle r="30" /><circle r="15" />
+            </g>
+          </svg>
+
+          <!-- ISOMETRIC LAYERS -->
+          <div class="isometric-layer" id="layer-0" style="left: 941px; top: 645px;">
+            <svg width="520" height="280" viewBox="-260 -140 520 280" style="overflow: visible;">
+              <path class="layer-base" d="M-160,0 L0,-90 L160,0 L0,90 Z" />
+              <path class="layer-depth-left" d="M-160,0 L-160,20 L0,110 L0,90 Z" />
+              <path class="layer-depth-right" d="M0,90 L0,110 L160,20 L160,0 Z" />
+              <g class="layer-internals">
+                <ellipse cx="-60" cy="-10" rx="25" ry="12" fill="none" stroke="#2d5a87" stroke-width="1.5" opacity="0.8" />
+                <line x1="-85" y1="-10" x2="-85" y2="15" stroke="#2d5a87" stroke-width="1.5" opacity="0.8" />
+                <line x1="-35" y1="-10" x2="-35" y2="15" stroke="#2d5a87" stroke-width="1.5" opacity="0.8" />
+                <ellipse cx="-60" cy="15" rx="25" ry="12" fill="none" stroke="#2d5a87" stroke-width="1.5" opacity="0.8" />
+                <path d="M-30,-5 L20,-5 L20,5 L60,5" fill="none" stroke="#4a7ba7" stroke-width="1" stroke-dasharray="4 2" opacity="0.6" />
+                <circle cx="60" cy="5" r="4" fill="#1e3a5f" opacity="0.8" />
+                <rect x="70" y="-25" width="60" height="50" fill="none" stroke="#a8c5db" stroke-width="1" rx="2" opacity="0.6" />
+                <line x1="70" y1="-10" x2="130" y2="-10" stroke="#a8c5db" stroke-width="1" opacity="0.4" />
+                <line x1="70" y1="5" x2="130" y2="5" stroke="#a8c5db" stroke-width="1" opacity="0.4" />
+              </g>
+              <circle class="layer-corner" cx="-160" cy="0" r="3" />
+              <circle class="layer-corner" cx="0" cy="-90" r="3" />
+              <circle class="layer-corner" cx="160" cy="0" r="3" />
+              <circle class="layer-corner" cx="0" cy="90" r="3" />
+            </svg>
+          </div>
+
+          <div class="isometric-layer" id="layer-1" style="left: 941px; top: 575px;">
+            <svg width="520" height="280" viewBox="-260 -140 520 280" style="overflow: visible;">
+              <path class="layer-base" d="M-160,0 L0,-90 L160,0 L0,90 Z" />
+              <path class="layer-depth-left" d="M-160,0 L-160,20 L0,110 L0,90 Z" />
+              <path class="layer-depth-right" d="M0,90 L0,110 L160,20 L160,0 Z" />
+              <g class="layer-internals">
+                <rect x="-80" y="-15" width="40" height="30" fill="none" stroke="#2d5a87" stroke-width="1.5" rx="4" opacity="0.8" />
+                <rect x="-20" y="-15" width="40" height="30" fill="none" stroke="#2d5a87" stroke-width="1.5" rx="4" opacity="0.8" />
+                <rect x="40" y="-15" width="40" height="30" fill="none" stroke="#2d5a87" stroke-width="1.5" rx="4" opacity="0.8" />
+                <path d="M-38,0 L-25,0" fill="none" stroke="#4a7ba7" stroke-width="1.5" opacity="0.7" />
+                <path d="M22,0 L35,0" fill="none" stroke="#4a7ba7" stroke-width="1.5" opacity="0.7" />
+                <polygon points="100,0 115,-15 130,0 115,15" fill="none" stroke="#c45d35" stroke-width="1.5" opacity="0.6" />
+                <path d="M82,0 L95,0" fill="none" stroke="#4a7ba7" stroke-width="1" opacity="0.5" />
+                <path d="M130,0 L145,0 L145,-20" fill="none" stroke="#a8c5db" stroke-width="1" opacity="0.4" />
+                <path d="M130,0 L145,0 L145,20" fill="none" stroke="#a8c5db" stroke-width="1" opacity="0.4" />
+              </g>
+              <circle class="layer-corner" cx="-160" cy="0" r="3" />
+              <circle class="layer-corner" cx="0" cy="-90" r="3" />
+              <circle class="layer-corner" cx="160" cy="0" r="3" />
+              <circle class="layer-corner" cx="0" cy="90" r="3" />
+            </svg>
+          </div>
+
+          <div class="isometric-layer" id="layer-2" style="left: 941px; top: 435px;">
+            <svg width="520" height="280" viewBox="-260 -140 520 280" style="overflow: visible;">
+              <path class="layer-base" d="M-160,0 L0,-90 L160,0 L0,90 Z" />
+              <path class="layer-depth-left" d="M-160,0 L-160,20 L0,110 L0,90 Z" />
+              <path class="layer-depth-right" d="M0,90 L0,110 L160,20 L160,0 Z" />
+              <g class="layer-internals">
+                <rect x="-100" y="-30" width="200" height="60" fill="none" stroke="#2d5a87" stroke-width="1.5" rx="4" opacity="0.8" />
+                <line x1="-100" y1="-18" x2="100" y2="-18" stroke="#2d5a87" stroke-width="1" opacity="0.6" />
+                <circle cx="-90" cy="-24" r="3" fill="#c45d35" opacity="0.6" />
+                <circle cx="-80" cy="-24" r="3" fill="#4a7ba7" opacity="0.6" />
+                <circle cx="-70" cy="-24" r="3" fill="#a8c5db" opacity="0.6" />
+                <rect x="-90" y="-10" width="60" height="8" fill="#a8c5db" opacity="0.4" rx="2" />
+                <rect x="-90" y="2" width="40" height="6" fill="#d4e4ed" opacity="0.3" rx="2" />
+                <rect x="-90" y="12" width="50" height="6" fill="#d4e4ed" opacity="0.3" rx="2" />
+                <rect x="-20" y="-10" width="110" height="35" fill="none" stroke="#a8c5db" stroke-width="1" rx="2" opacity="0.4" />
+              </g>
+              <circle class="layer-corner" cx="-160" cy="0" r="3" />
+              <circle class="layer-corner" cx="0" cy="-90" r="3" />
+              <circle class="layer-corner" cx="160" cy="0" r="3" />
+              <circle class="layer-corner" cx="0" cy="90" r="3" />
+            </svg>
+          </div>
+
+          <div class="isometric-layer" id="layer-3" style="left: 941px; top: 505px;">
+            <svg width="520" height="280" viewBox="-260 -140 520 280" style="overflow: visible;">
+              <path class="layer-base" d="M-160,0 L0,-90 L160,0 L0,90 Z" />
+              <path class="layer-depth-left" d="M-160,0 L-160,20 L0,110 L0,90 Z" />
+              <path class="layer-depth-right" d="M0,90 L0,110 L160,20 L160,0 Z" />
+              <g class="layer-internals">
+                <circle cx="0" cy="0" r="20" fill="none" stroke="#2d5a87" stroke-width="2" opacity="0.9" />
+                <circle cx="0" cy="0" r="8" fill="#a8c5db" opacity="0.3" />
+                <g>
+                  <line x1="15" y1="-15" x2="45" y2="-35" stroke="#c45d35" stroke-width="1" stroke-dasharray="4 2" opacity="0.6" />
+                  <rect x="38" y="-47" width="24" height="24" fill="none" stroke="#c45d35" stroke-width="1.5" rx="4" opacity="0.7" />
+                </g>
+                <g>
+                  <line x1="15" y1="15" x2="45" y2="35" stroke="#2d5a87" stroke-width="1" stroke-dasharray="4 2" opacity="0.6" />
+                  <rect x="38" y="23" width="24" height="24" fill="none" stroke="#2d5a87" stroke-width="1.5" rx="4" opacity="0.7" />
+                </g>
+                <g>
+                  <line x1="-15" y1="-15" x2="-45" y2="-35" stroke="#4a7ba7" stroke-width="1" stroke-dasharray="4 2" opacity="0.6" />
+                  <rect x="-62" y="-47" width="24" height="24" fill="none" stroke="#4a7ba7" stroke-width="1.5" rx="4" opacity="0.7" />
+                </g>
+                <g>
+                  <line x1="-15" y1="15" x2="-45" y2="35" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="4 2" opacity="0.6" />
+                  <rect x="-62" y="23" width="24" height="24" fill="none" stroke="#1e3a5f" stroke-width="1.5" rx="4" opacity="0.7" />
+                </g>
+              </g>
+              <circle class="layer-corner" cx="-160" cy="0" r="3" />
+              <circle class="layer-corner" cx="0" cy="-90" r="3" />
+              <circle class="layer-corner" cx="160" cy="0" r="3" />
+              <circle class="layer-corner" cx="0" cy="90" r="3" />
+            </svg>
+          </div>
+
+          <!-- CALLOUTS -->
+          <div class="callout" id="callout-0" style="left: 1242.24px; top: 630px;">
+            <svg class="callout-connector" viewBox="0 0 140 20">
+              <circle class="callout-dot" cx="-141" cy="12" r="4" opacity="0" />
+              <line class="callout-line" x1="-135" y1="12" x2="-135" y2="12" />
+            </svg>
+            <div class="callout-content">
+              <span class="callout-number">01</span>
+              <div class="callout-label-row">
+                <span class="callout-label"></span>
+                <span class="callout-cursor">|</span>
+              </div>
+              <div class="callout-sublabel">PostgreSQL &bull; Redis &bull; S3</div>
+            </div>
+          </div>
+
+          <div class="callout" id="callout-1" style="left: 1242.24px; top: 560px;">
+            <svg class="callout-connector" viewBox="0 0 140 20">
+              <circle class="callout-dot" cx="-141" cy="12" r="4" opacity="0" />
+              <line class="callout-line" x1="-135" y1="12" x2="-135" y2="12" />
+            </svg>
+            <div class="callout-content">
+              <span class="callout-number">02</span>
+              <div class="callout-label-row">
+                <span class="callout-label"></span>
+                <span class="callout-cursor">|</span>
+              </div>
+              <div class="callout-sublabel">APIs &bull; Workflows &bull; Rules</div>
+            </div>
+          </div>
+
+          <div class="callout" id="callout-2" style="left: 1242.24px; top: 420px;">
+            <svg class="callout-connector" viewBox="0 0 140 20">
+              <circle class="callout-dot" cx="-141" cy="12" r="4" opacity="0" />
+              <line class="callout-line" x1="-135" y1="12" x2="-135" y2="12" />
+            </svg>
+            <div class="callout-content">
+              <span class="callout-number">04</span>
+              <div class="callout-label-row">
+                <span class="callout-label"></span>
+                <span class="callout-cursor">|</span>
+              </div>
+              <div class="callout-sublabel">React &bull; Mobile &bull; Dashboard</div>
+            </div>
+          </div>
+
+          <div class="callout" id="callout-3" style="left: 1242.24px; top: 490px;">
+            <svg class="callout-connector" viewBox="0 0 140 20">
+              <circle class="callout-dot" cx="-141" cy="12" r="4" opacity="0" />
+              <line class="callout-line" x1="-135" y1="12" x2="-135" y2="12" />
+            </svg>
+            <div class="callout-content">
+              <span class="callout-number">03</span>
+              <div class="callout-label-row">
+                <span class="callout-label"></span>
+                <span class="callout-cursor">|</span>
+              </div>
+              <div class="callout-sublabel">Stripe &bull; Auth &bull; Analytics</div>
+            </div>
+          </div>
+
+          <!-- CORE LOGO -->
+          <div class="core-logo" id="core-logo">
+            <div class="logo-text-container">
+              <div class="dem-systems-row">
+                <span class="dem-text">DEM</span>
+                <span class="systems-text" id="systems-text"></span>
+                <span class="systems-cursor" id="systems-cursor">|</span>
+              </div>
+              <div class="tagline" id="tagline">Complexity &rarr; Clarity</div>
+            </div>
+          </div>
+
+          <!-- SENTENCES -->
+          <div class="sentences-container" id="sentences">
+            <span class="sentence-text" id="sentence-text"></span>
+            <span class="sentence-cursor" id="sentence-cursor">|</span>
+          </div>
+
+          <!-- ARROW -->
+          <svg class="ready-arrow" id="ready-arrow" viewBox="0 0 24 60">
+            <line class="arrow-stem" id="arrow-stem" x1="12" y1="0" x2="12" y2="28" />
+            <path class="arrow-head" id="arrow-head" d="M4,20 L12,28 L20,20" />
+          </svg>
+
+        </div><!-- /.blueprint-canvas -->
+      </div><!-- /.blueprint-scroll-container -->
+
+      <div class="blueprint-scroll-spacer"></div>
     </section>
 
     <!-- Contact Section -->
@@ -382,6 +714,7 @@
     <a href="#" class="mobile-nav__logo" aria-label="Back to top">DEM</a>
     <ul class="mobile-nav__links">
       <li><a href="#about" class="mobile-nav__link" data-text="About">About</a></li>
+      <li><a href="#blueprint" class="mobile-nav__link" data-text="Blueprint">Blueprint</a></li>
       <li><a href="#contact" class="mobile-nav__link" data-text="Contact">Contact</a></li>
     </ul>
   </nav>
@@ -396,6 +729,24 @@
       }
     }
   </script>
+
+  <!-- GSAP for Blueprint Section -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
+
+  <!-- Blueprint Machine Scripts -->
+  <script src="gsap-blueprint-scroll/js/config.js"></script>
+  <script src="gsap-blueprint-scroll/js/utils.js"></script>
+  <script src="gsap-blueprint-scroll/js/grid.js"></script>
+  <script src="gsap-blueprint-scroll/js/layers.js"></script>
+  <script src="gsap-blueprint-scroll/js/callouts.js"></script>
+  <script src="gsap-blueprint-scroll/js/markers.js"></script>
+  <script src="gsap-blueprint-scroll/js/pulses.js"></script>
+  <script src="gsap-blueprint-scroll/js/logo.js"></script>
+  <script src="gsap-blueprint-scroll/js/sentences.js"></script>
+  <script src="gsap-blueprint-scroll/js/scroll-controller.js"></script>
+  <script src="gsap-blueprint-scroll/js/main.js"></script>
 
   <!-- Application Scripts -->
   <!-- <script type="module" src="js/thread.js"></script> --> <!-- Rope disabled temporarily -->
@@ -554,26 +905,11 @@
     })();
   </script>
 
-  <!-- HERO SCROLL TRIGGER: Auto-fire magnetic cursor at 30% + scroll-tied opacity fade -->
+  <!-- HERO SCROLL TRIGGER: Fade out video reveal at 30% scroll -->
   <script type="module">
-    import { triggerCapture, isTriggered, resetCapture } from './js/magnetic-cursor.js';
-    import { initHeroVideoReveal } from './js/hero-video-reveal.js';
-
-    const TRIGGER_THRESHOLD = 0.30; // 30% scroll through hero
+    const TRIGGER_THRESHOLD = 0.30;
     let isTriggeredState = false;
-
-    // Cache DOM references
     let hero = null;
-    let metaCanvas = null;
-    let aboutContent = null;
-    let periodRectSvg = null;
-
-    function initRefs() {
-      hero = document.querySelector('.section--hero');
-      metaCanvas = document.getElementById('metamorphosis-canvas');
-      aboutContent = document.querySelector('.about-content');
-      periodRectSvg = document.getElementById('period-rect-svg');
-    }
 
     function checkHeroScroll() {
       if (!hero) return;
@@ -583,101 +919,20 @@
       const scrolledIntoHero = -rect.top;
       const progress = scrolledIntoHero / heroHeight;
 
-      // --- TRIGGER at 30% (scrolling down) ---
+      // Trigger at 30% (scrolling down)
       if (!isTriggeredState && progress >= TRIGGER_THRESHOLD && progress < 1) {
         isTriggeredState = true;
-
-        // 1. Trigger magnetic cursor capture
-        triggerCapture();
-
-        // 2. Fade out video reveal
         if (window.fadeOutVideoReveal) {
           window.fadeOutVideoReveal();
         }
-
-        console.log('[HeroScrollTrigger] Activated at', Math.round(progress * 100) + '%');
       }
 
-      // --- RESET when scrolling back up past 30% ---
+      // Reset when scrolling back up past 30%
       if (isTriggeredState && progress < TRIGGER_THRESHOLD) {
         isTriggeredState = false;
-
-        // Stop metamorphosis and close rectangle via scroll-owned reset
-        resetCapture();
-        if (window.stopMetamorphosis) {
-          window.stopMetamorphosis();
-        }
-
-        // Hide metamorphosis canvas + rectangle immediately
-        if (metaCanvas) {
-          metaCanvas.style.opacity = '0';
-        }
-        if (periodRectSvg) {
-          periodRectSvg.style.opacity = '';  // restore CSS control
-        }
-
-        // Re-initialize video reveal if not already running
-        if (!window.__heroVideoReveal) {
-          const playlistAttr = hero.dataset.videoPlaylist || '';
-          const videoPlaylist = playlistAttr ? playlistAttr.split(',').map(s => s.trim()).filter(Boolean) : [];
-
-          const instance = initHeroVideoReveal({
-            heroSelector: '.section--hero',
-            videoSrc: hero.dataset.videoSrc || 'assets/videos/dem-loop-08.webm',
-            fallbackSrc: hero.dataset.fallbackSrc || 'assets/videos/dem-loop-08.mp4',
-            videoPlaylist,
-            revealRadius: parseInt(hero.dataset.revealRadius, 10) || 180,
-            edgeSoftness: parseInt(hero.dataset.edgeSoftness, 10) || 50,
-            opacity: parseFloat(hero.dataset.videoOpacity) || 0.95
-          });
-
-          if (instance) {
-            window.__heroVideoReveal = instance;
-            const canvas = hero.querySelector('canvas');
-            if (canvas) {
-              canvas.style.transition = 'opacity 0.3s ease-in';
-              canvas.style.opacity = '1';
-            }
-          }
-        }
-
-        console.log('[HeroScrollTrigger] Reset - video reveal restored');
-      }
-
-      // --- RELEASE CURSOR when hero scrolls fully off-screen ---
-      if (isTriggeredState && progress >= 1.0) {
-        resetCapture(); // Frees cursor from period lock (early-returns if already released)
-      }
-
-      // --- SCROLL-TIED OPACITY FADE based on about section proximity ---
-      if (isTriggeredState && metaCanvas && aboutContent) {
-        const aboutRect = aboutContent.getBoundingClientRect();
-        const vh = window.innerHeight;
-
-        // Safe zone: about content top is below 75% of viewport height
-        // Danger zone: about content top is at or above 50% of viewport height
-        const safeThreshold = vh * 0.75;
-        const dangerThreshold = vh * 0.50;
-
-        let opacity;
-        if (aboutRect.top >= safeThreshold) {
-          opacity = 1;
-        } else if (aboutRect.top <= dangerThreshold) {
-          opacity = 0;
-        } else {
-          opacity = (aboutRect.top - dangerThreshold) / (safeThreshold - dangerThreshold);
-          opacity = Math.max(0, Math.min(1, opacity));
-        }
-
-        // Apply to both metamorphosis canvas AND period rectangle SVG
-        metaCanvas.style.opacity = String(opacity);
-        if (periodRectSvg) {
-          periodRectSvg.style.opacity = String(opacity);
-        }
       }
     }
 
-    // Listen for scroll (RAF-throttled)
     let scrollTicking = false;
     window.addEventListener('scroll', () => {
       if (!scrollTicking) {
@@ -689,9 +944,8 @@
       }
     }, { passive: true });
 
-    // Initialize on DOM ready
     function init() {
-      initRefs();
+      hero = document.querySelector('.section--hero');
       checkHeroScroll();
     }
 
@@ -1694,28 +1948,6 @@
   </script>
 
   <!-- Magnetic Cursor & Metamorphosis Animation -->
-  <script type="module">
-    import { initMagneticCursor } from './js/magnetic-cursor.js';
-    import { initMetamorphosis } from './js/metamorphosis-canvas.js';
-
-    // Initialize after DOM ready and cursor.js has created .custom-cursor
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        // Small delay to ensure cursor.js has initialized first
-        setTimeout(() => {
-          // Autoplay metamorphosis on page load (not scroll-tied)
-          initMetamorphosis({ autoplay: true, autoplayDelay: 800 });
-          initMagneticCursor();
-        }, 150);
-      });
-    } else {
-      setTimeout(() => {
-        // Autoplay metamorphosis on page load (not scroll-tied)
-        initMetamorphosis({ autoplay: true, autoplayDelay: 800 });
-        initMagneticCursor();
-      }, 150);
-    }
-  </script>
 
   <!-- Cal.com Embed Script for Booking Modal -->
   <script>

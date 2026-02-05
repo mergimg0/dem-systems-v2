@@ -1,0 +1,503 @@
+/**
+ * Blueprint Machine - Component Styles
+ */
+
+/* ============================================================================
+   BASE CONTAINER
+   ============================================================================ */
+
+.blueprint-section {
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.blueprint-scroll-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.blueprint-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--canvas-width);
+  height: var(--canvas-height);
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  background: #ffffff;
+  overflow: visible;
+}
+
+.blueprint-scroll-spacer {
+  height: calc(var(--scroll-distance) - 100vh);
+  pointer-events: none;
+}
+
+/* ============================================================================
+   GRID
+   ============================================================================ */
+
+.blueprint-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.grid-line {
+  stroke-width: 0.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.h-line {
+  stroke: url(#navyGradientH);
+}
+
+.v-line {
+  stroke: url(#navyGradientV);
+}
+
+/* ============================================================================
+   CROSSHAIRS
+   ============================================================================ */
+
+.crosshairs {
+  opacity: 0;
+}
+
+.crosshair-line {
+  stroke: var(--navy-faint);
+  stroke-width: 1;
+  stroke-dasharray: 8 4;
+}
+
+/* ============================================================================
+   CORNER MARKERS
+   ============================================================================ */
+
+.corner-marker {
+  opacity: 0;
+}
+
+.corner-marker line {
+  stroke: var(--navy-mid);
+  stroke-width: 1.5;
+}
+
+/* ============================================================================
+   TITLE
+   ============================================================================ */
+
+.blueprint-title {
+  position: absolute;
+  top: 40px;
+  left: 100px;
+  opacity: 0;
+}
+
+.title-pretitle {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-marker-label);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-light);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.title-main {
+  font-family: var(--font-primary);
+  font-size: 32px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================================
+   TIMELINE MARKERS
+   ============================================================================ */
+
+.timeline-markers {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: 100px;
+  transform: translateY(-50%) translateX(-20px);
+  opacity: 0;
+}
+
+.timeline-marker-label {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-marker-label);
+  font-weight: var(--font-weight-medium);
+  color: var(--navy-dark);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.timeline-marker-sublabel {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-regular);
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+/* ============================================================================
+   PROGRESS PULSES
+   ============================================================================ */
+
+.progress-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  opacity: 0;
+}
+
+.pulse-trail {
+  stroke: var(--navy-mid);
+  stroke-width: 2;
+  stroke-dasharray: 8 4;
+}
+
+.pulse-glow {
+  fill: var(--navy-light);
+  opacity: 0.3;
+}
+
+.pulse-core {
+  fill: var(--navy-dark);
+}
+
+.pulse-impact circle:first-child {
+  fill: none;
+  stroke: var(--navy-mid);
+  stroke-width: 2;
+}
+
+.pulse-impact circle:last-child {
+  fill: var(--navy-light);
+  opacity: 0.5;
+}
+
+/* ============================================================================
+   ISOMETRIC LAYERS
+   ============================================================================ */
+
+.isometric-layer {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.isometric-layer svg {
+  overflow: visible;
+}
+
+.layer-base {
+  fill: var(--layer-fill);
+  fill-opacity: 0.95;
+  stroke: var(--layer-stroke);
+  stroke-width: 2;
+}
+
+.layer-depth-left {
+  fill: var(--bg-warm);
+  stroke: var(--navy-faint);
+  stroke-width: 1;
+  opacity: 0.8;
+}
+
+.layer-depth-right {
+  fill: var(--bg-white);
+  stroke: var(--navy-faint);
+  stroke-width: 1;
+  opacity: 0.8;
+}
+
+.layer-internals {
+  opacity: 1;
+}
+
+.layer-corner {
+  fill: var(--navy-dark);
+  opacity: 0.8;
+}
+
+/* Layer internal elements */
+.layer-internals ellipse,
+.layer-internals circle,
+.layer-internals rect,
+.layer-internals polygon {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ============================================================================
+   CALLOUTS
+   ============================================================================ */
+
+.callout {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  opacity: 0;
+}
+
+.callout-connector {
+  flex-shrink: 0;
+  width: 140px;
+  height: 20px;
+  overflow: visible;
+}
+
+.callout-dot {
+  fill: var(--navy-dark);
+}
+
+.callout-line {
+  stroke: var(--navy-mid);
+  stroke-width: 1.5;
+}
+
+.callout-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.callout-number {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-callout-number);
+  font-weight: var(--font-weight-semibold);
+  color: var(--navy-mid);
+  opacity: 0;
+}
+
+.callout-label-row {
+  display: flex;
+  align-items: center;
+}
+
+.callout-label {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-callout-label);
+  font-weight: var(--font-weight-semibold);
+  color: var(--navy-dark);
+}
+
+.callout-cursor {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-callout-label);
+  font-weight: var(--font-weight-light);
+  color: var(--navy-mid);
+  margin-left: 2px;
+  opacity: 0;
+}
+
+.callout-sublabel {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-callout-sublabel);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-light);
+  opacity: 0;
+}
+
+/* ============================================================================
+   CORE LOGO
+   ============================================================================ */
+
+.core-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  text-align: center;
+}
+
+.logo-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dem-systems-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.dem-text {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-logo);
+  font-weight: var(--font-weight-bold);
+  color: var(--navy-dark);
+  letter-spacing: -0.01em;
+}
+
+.systems-text {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-logo);
+  font-weight: var(--font-weight-bold);
+  color: var(--navy-dark);
+  letter-spacing: -0.01em;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.systems-cursor {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-logo);
+  font-weight: var(--font-weight-light);
+  color: var(--navy-mid);
+  transform: scaleX(0.5);
+  opacity: 0;
+}
+
+.tagline {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-tagline);
+  font-weight: var(--font-weight-light);
+  color: var(--text-mid);
+  margin-top: 20px;
+  margin-left: -30px;
+  opacity: 0;
+}
+
+/* ============================================================================
+   SENTENCES
+   ============================================================================ */
+
+.sentences-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.sentence-text {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sentence);
+  font-weight: var(--font-weight-medium);
+  color: var(--navy-dark);
+  letter-spacing: 0.02em;
+}
+
+.sentence-cursor {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sentence);
+  font-weight: var(--font-weight-light);
+  color: var(--navy-mid);
+  /* Zero-width layout: cursor is visible but doesn't affect text centering */
+  display: inline-block;
+  width: 0;
+  overflow: visible;
+  margin-left: 2px;
+}
+
+/* ============================================================================
+   ARROW
+   ============================================================================ */
+
+.ready-arrow {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 60px);
+  transform: translateX(-50%);
+  width: var(--arrow-width);
+  height: var(--arrow-height);
+  opacity: 0;
+  overflow: visible;
+}
+
+.arrow-stem {
+  stroke: var(--navy-mid);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.arrow-head {
+  stroke: var(--navy-mid);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ============================================================================
+   RESPONSIVE SCALING
+   ============================================================================ */
+
+@media (max-width: 1920px) {
+  .blueprint-canvas {
+    transform: translate(-50%, -50%) scale(calc(100vw / 1920));
+  }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  .blueprint-canvas {
+    transform: translate(-50%, -50%) scale(min(calc(100vw / 1920), calc(100vh / 1080)));
+  }
+}
+
+@media (max-width: 768px) {
+  .blueprint-canvas {
+    /* Mobile: Slightly smaller scale for padding */
+    transform: translate(-50%, -50%) scale(calc(100vw / 1920 * 0.95));
+  }
+}
+
+/* ============================================================================
+   REDUCED MOTION
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .blueprint-canvas {
+    /* Show final state */
+  }
+
+  .isometric-layer,
+  .callout,
+  .blueprint-grid,
+  .blueprint-title,
+  .timeline-markers,
+  .crosshairs,
+  .corner-marker,
+  .progress-pulse,
+  .core-logo {
+    display: none !important;
+  }
+
+  .sentences-container {
+    opacity: 1 !important;
+  }
+
+  .sentence-text::after {
+    content: '7 days to production.';
+  }
+
+  .ready-arrow {
+    display: none !important;
+  }
+}

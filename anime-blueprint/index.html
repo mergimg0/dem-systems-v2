@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Blueprint Machine - Anime.js</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@200;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="blueprint-container" id="blueprint">
+    <!-- Background Grid SVG -->
+    <svg class="blueprint-grid" id="grid" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="navyGradientH" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a2744" stop-opacity="0" />
+          <stop offset="20%" stop-color="#1a2744" stop-opacity="0.15" />
+          <stop offset="50%" stop-color="#1a2744" stop-opacity="0.2" />
+          <stop offset="80%" stop-color="#1a2744" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#1a2744" stop-opacity="0" />
+        </linearGradient>
+        <linearGradient id="navyGradientV" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1a2744" stop-opacity="0" />
+          <stop offset="20%" stop-color="#1a2744" stop-opacity="0.15" />
+          <stop offset="50%" stop-color="#1a2744" stop-opacity="0.2" />
+          <stop offset="80%" stop-color="#1a2744" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#1a2744" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Horizontal grid lines -->
+      <g id="h-lines"></g>
+
+      <!-- Vertical grid lines -->
+      <g id="v-lines"></g>
+
+      <!-- Center crosshairs -->
+      <g id="crosshairs" opacity="0">
+        <line x1="576" y1="540" x2="1152" y2="540" stroke="#3d4f6f" stroke-width="1" stroke-dasharray="8 4" />
+        <line x1="864" y1="270" x2="864" y2="810" stroke="#3d4f6f" stroke-width="1" stroke-dasharray="8 4" />
+      </g>
+
+      <!-- Corner markers -->
+      <g id="corner-markers">
+        <g class="corner-marker" data-index="0" opacity="0">
+          <line x1="28" y1="40" x2="52" y2="40" stroke="#3d4f6f" stroke-width="1.5" />
+          <line x1="40" y1="28" x2="40" y2="52" stroke="#3d4f6f" stroke-width="1.5" />
+        </g>
+        <g class="corner-marker" data-index="1" opacity="0">
+          <line x1="1868" y1="40" x2="1892" y2="40" stroke="#3d4f6f" stroke-width="1.5" />
+          <line x1="1880" y1="28" x2="1880" y2="52" stroke="#3d4f6f" stroke-width="1.5" />
+        </g>
+        <g class="corner-marker" data-index="2" opacity="0">
+          <line x1="28" y1="1040" x2="52" y2="1040" stroke="#3d4f6f" stroke-width="1.5" />
+          <line x1="40" y1="1028" x2="40" y2="1052" stroke="#3d4f6f" stroke-width="1.5" />
+        </g>
+        <g class="corner-marker" data-index="3" opacity="0">
+          <line x1="1868" y1="1040" x2="1892" y2="1040" stroke="#3d4f6f" stroke-width="1.5" />
+          <line x1="1880" y1="1028" x2="1880" y2="1052" stroke="#3d4f6f" stroke-width="1.5" />
+        </g>
+      </g>
+    </svg>
+
+    <!-- Title -->
+    <div class="title" id="title">
+      <div class="title-label">DEM Systems</div>
+      <div class="title-main">The Blueprint Machine</div>
+    </div>
+
+    <!-- Timeline Markers -->
+    <div class="timeline-markers" id="timeline-markers">
+      <div class="timeline-marker" id="marker-1" data-y="378">
+        <div class="marker-time">30 min</div>
+        <div class="marker-label">Discovery</div>
+      </div>
+      <div class="timeline-marker" id="marker-2" data-y="540">
+        <div class="marker-time">24 hours</div>
+        <div class="marker-label">V1 Build</div>
+      </div>
+      <div class="timeline-marker" id="marker-3" data-y="702">
+        <div class="marker-time">7 days</div>
+        <div class="marker-label">Production</div>
+      </div>
+    </div>
+
+    <!-- Isometric Layers Container -->
+    <div class="layers-container" id="layers-container">
+      <div class="isometric-layer" id="layer-0" data-index="0"></div>
+      <div class="isometric-layer" id="layer-1" data-index="1"></div>
+      <div class="isometric-layer" id="layer-2" data-index="2"></div>
+      <div class="isometric-layer" id="layer-3" data-index="3"></div>
+    </div>
+
+    <!-- Callouts -->
+    <div class="callouts" id="callouts">
+      <div class="callout" id="callout-0">
+        <svg class="callout-line" viewBox="0 0 140 10">
+          <circle cx="0" cy="5" r="4" fill="#1a2744" opacity="0" class="callout-dot" />
+          <line x1="6" y1="5" x2="6" y2="5" stroke="#3d4f6f" stroke-width="1.5" class="callout-connector" />
+        </svg>
+        <div class="callout-content">
+          <div class="callout-number">01</div>
+          <div class="callout-label"></div>
+          <div class="callout-sublabel">PostgreSQL • Redis • S3</div>
+        </div>
+      </div>
+      <div class="callout" id="callout-1">
+        <svg class="callout-line" viewBox="0 0 140 10">
+          <circle cx="0" cy="5" r="4" fill="#1a2744" opacity="0" class="callout-dot" />
+          <line x1="6" y1="5" x2="6" y2="5" stroke="#3d4f6f" stroke-width="1.5" class="callout-connector" />
+        </svg>
+        <div class="callout-content">
+          <div class="callout-number">02</div>
+          <div class="callout-label"></div>
+          <div class="callout-sublabel">APIs • Workflows • Rules</div>
+        </div>
+      </div>
+      <div class="callout" id="callout-2">
+        <svg class="callout-line" viewBox="0 0 140 10">
+          <circle cx="0" cy="5" r="4" fill="#1a2744" opacity="0" class="callout-dot" />
+          <line x1="6" y1="5" x2="6" y2="5" stroke="#3d4f6f" stroke-width="1.5" class="callout-connector" />
+        </svg>
+        <div class="callout-content">
+          <div class="callout-number">03</div>
+          <div class="callout-label"></div>
+          <div class="callout-sublabel">React • Mobile • Dashboard</div>
+        </div>
+      </div>
+      <div class="callout" id="callout-3">
+        <svg class="callout-line" viewBox="0 0 140 10">
+          <circle cx="0" cy="5" r="4" fill="#1a2744" opacity="0" class="callout-dot" />
+          <line x1="6" y1="5" x2="6" y2="5" stroke="#3d4f6f" stroke-width="1.5" class="callout-connector" />
+        </svg>
+        <div class="callout-content">
+          <div class="callout-number">04</div>
+          <div class="callout-label"></div>
+          <div class="callout-sublabel">Stripe • Auth • Analytics</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Logo -->
+    <div class="core-logo" id="core-logo">
+      <!-- Circle elements -->
+      <svg class="logo-circles" id="logo-circles" viewBox="-110 -110 220 220">
+        <!-- Outer rotating ring -->
+        <g id="outer-ring">
+          <circle cx="0" cy="0" r="95" fill="none" stroke="#2a3a5a" stroke-width="0.5" stroke-dasharray="8 16" opacity="0.5" />
+          <!-- Tick marks -->
+          <g id="tick-marks"></g>
+        </g>
+        <!-- Middle ring -->
+        <circle cx="0" cy="0" r="70" fill="none" stroke="#1a2744" stroke-width="1" />
+        <!-- Inner filled circle -->
+        <circle cx="0" cy="0" r="50" fill="#fafbfc" stroke="#1a2744" stroke-width="1.5" />
+        <!-- Decorative inner ring -->
+        <circle cx="0" cy="0" r="35" fill="none" stroke="#2a3a5a" stroke-width="0.5" opacity="0.5" />
+        <!-- Corner brackets -->
+        <g id="corner-brackets"></g>
+      </svg>
+
+      <!-- Text container -->
+      <div class="logo-text">
+        <div class="dem-row">
+          <span class="dem-text">DEM</span>
+          <span class="systems-text" id="systems-text"></span>
+          <span class="cursor" id="systems-cursor">|</span>
+        </div>
+        <div class="tagline" id="tagline">Complexity → Clarity</div>
+      </div>
+    </div>
+
+    <!-- Sequential Sentences -->
+    <div class="sentences" id="sentences">
+      <span class="sentence-text" id="sentence-text"></span>
+      <span class="sentence-cursor" id="sentence-cursor">|</span>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="blueprint.js"></script>
+</body>
+</html>

@@ -616,9 +616,10 @@ body {
   min-height: auto;
 }
 
-/* Contact follows shortly after About */
+/* Contact follows shortly after Blueprint */
 .section--contact {
-  margin-top: -20vh;
+  margin-top: 0;
+  padding-top: 0; /* Seamless transition from blueprint section */
   padding-bottom: 20vh; /* Center contact content when fully scrolled */
 }
 
@@ -2267,12 +2268,23 @@ input, textarea {
    Hybrid pin/flow scroll with frame sequence and text animations
    ========================================================================== */
 
+/* Blueprint section - no padding, seamless transitions */
+.blueprint-section {
+  padding: 0;
+  margin: 0;
+  margin-top: -100vh; /* Pull up to start immediately after About content */
+  min-height: auto;
+  position: relative;
+  z-index: 10; /* Above about section */
+}
+
 /* About section container - hosts canvas and content */
 .section--about {
   position: relative;
   min-height: auto;
   overflow: visible;
   margin-top: -35vh; /* Pull up into hero viewport so it appears earlier */
+  padding-bottom: 0; /* Seamless transition to blueprint section */
 }
 
 /* During pin, section becomes viewport height and stays fixed */
@@ -2334,7 +2346,7 @@ input, textarea {
 .about-content {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: 15vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2632,88 +2644,6 @@ input, textarea {
 @media (hover: none), (pointer: coarse) {
   .sprite-hover-trigger__sprite {
     display: none;
-  }
-}
-
-/* ==========================================================================
-   Period Magnet & Metamorphosis Overlay
-   ========================================================================== */
-
-/* Period Trigger - subtle wiggle to invite interaction */
-.period-trigger {
-  display: inline-block;
-  animation: subtle-wiggle 2.5s ease-in-out infinite;
-  cursor: pointer;
-}
-
-@keyframes subtle-wiggle {
-  0%, 100% { transform: translate(0, 0); }
-  20% { transform: translate(0.5px, -0.5px); }
-  40% { transform: translate(-0.5px, 0.5px); }
-  60% { transform: translate(0.5px, 0.3px); }
-  80% { transform: translate(-0.3px, -0.5px); }
-}
-
-/* Period Rectangle SVG Overlay */
-.period-rect-svg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.period-rect-svg.active {
-  opacity: 1;
-}
-
-.period-rect-path {
-  fill: none;
-  stroke: var(--color-text);
-  stroke-width: 2;
-  stroke-dasharray: 0;
-  stroke-dashoffset: 0;
-}
-
-/* Metamorphosis Canvas - positioned below hero tagline */
-#metamorphosis-canvas {
-  position: fixed;
-  left: 0;
-  top: 62%;
-  width: 100%;
-  height: 35%;
-  pointer-events: none;
-  z-index: 9997;
-  opacity: 0;
-  transition: opacity 0.15s ease-out;
-}
-
-/* Reduced motion - disable magnetic cursor animations */
-@media (prefers-reduced-motion: reduce) {
-  .period-trigger {
-    animation: none;
-  }
-
-  .period-rect-svg,
-  #metamorphosis-canvas {
-    display: none !important;
-  }
-}
-
-/* Touch devices - disable magnetic cursor (no hover) */
-@media (hover: none), (pointer: coarse) {
-  .period-trigger {
-    animation: none;
-    cursor: default;
-  }
-
-  .period-rect-svg,
-  #metamorphosis-canvas {
-    display: none !important;
   }
 }
 

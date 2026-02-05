@@ -23,3 +23,7 @@ dist/
 
 # Local thoughts/plans
 thoughts/
+
+# Large video files
+remotion-blueprint/out/*.mov
+remotion-blueprint/out/*.mp4
