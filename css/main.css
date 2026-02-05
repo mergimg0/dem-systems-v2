@@ -100,38 +100,6 @@
   --nav-height-mobile: 60px;
   --nav-transition-duration: 450ms;
   --typewriter-char-duration: 50ms;
-
-  /* Mobile Foundation (CSS can't use vars in media queries, but good for documentation) */
-  /* --breakpoint-sm: 480px;   Small phones */
-  /* --breakpoint-md: 768px;   Large phones, small tablets */
-  /* --breakpoint-lg: 1024px;  Tablets, small laptops */
-  /* --breakpoint-xl: 1440px;  Desktops */
-
-  /* Touch target minimum (WCAG 2.2 recommends 44px) */
-  --touch-target-min: 44px;
-
-  /* Safe area insets */
-  --safe-area-top: env(safe-area-inset-top, 0px);
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-area-left: env(safe-area-inset-left, 0px);
-  --safe-area-right: env(safe-area-inset-right, 0px);
-}
-
-/* Mobile-specific spacing overrides */
-@media (max-width: 768px) {
-  :root {
-    --space-section: clamp(40px, 8vh, 80px);
-    --space-element: clamp(16px, 3vh, 32px);
-    --container-padding: clamp(16px, 5vw, 80px);
-  }
-}
-
-@media (max-width: 480px) {
-  :root {
-    --space-section: clamp(32px, 6vh, 60px);
-    --space-element: clamp(12px, 2.5vh, 24px);
-    --container-padding: clamp(16px, 4vw, 48px);
-  }
 }
 
 /* ==========================================================================
@@ -522,47 +490,6 @@ body {
 
   .hero-emergence-container {
     min-height: clamp(40px, 8vw, 80px);
-  }
-
-  /* Hero section mobile adjustments */
-  .hero-title-wrapper {
-    padding: 0.5rem 0;
-  }
-
-  .hero-video-text-container {
-    height: clamp(50px, 12vw, 100px);
-  }
-
-  .hero-tagline {
-    font-size: var(--font-size-body);
-    margin-top: var(--space-small);
-  }
-
-  .hero-tagline--kinetic {
-    font-size: var(--font-size-lead);
-  }
-
-  .hero-tagline--secondary {
-    font-size: var(--font-size-body);
-  }
-
-  /* Scroll indicator safe positioning */
-  .scroll-indicator {
-    bottom: calc(var(--nav-height-mobile) + var(--space-small) + var(--safe-area-bottom));
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-video-text-container {
-    height: clamp(40px, 14vw, 80px);
-  }
-
-  .hero-tagline--kinetic {
-    font-size: var(--font-size-body);
-  }
-
-  .hero-tagline--secondary {
-    font-size: var(--font-size-small);
   }
 }
 
@@ -1590,49 +1517,6 @@ a:not(.cta):not(.text-link):focus {
   margin-top: var(--space-small);
 }
 
-/* Contact section mobile optimizations */
-@media (max-width: 768px) {
-  .section--contact {
-    /* Account for mobile nav at bottom + safe area */
-    padding-bottom: calc(var(--nav-height-mobile) + var(--safe-area-bottom) + var(--space-section));
-  }
-
-  .contact-content {
-    gap: var(--space-small);
-  }
-
-  .contact-subtext {
-    font-size: var(--font-size-body);
-    max-width: none; /* Full width on mobile */
-  }
-
-  /* CTA touch target improvement - minimum 44px height */
-  .cta,
-  .submit-button {
-    min-height: var(--touch-target-min);
-    padding: 0.875em 1.5em;
-    font-size: clamp(14px, 3.5vw, 16px);
-  }
-
-  .calendly-container {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .section--contact {
-    padding-bottom: calc(var(--nav-height-mobile) + var(--safe-area-bottom) + var(--space-element));
-  }
-
-  .cta,
-  .submit-button {
-    /* Full width buttons on small screens for easier touch */
-    width: 100%;
-    text-align: center;
-    padding: 1em 1.5em;
-  }
-}
-
 /* ==========================================================================
    Skip Link (Accessibility)
    ========================================================================== */
@@ -2380,59 +2264,6 @@ input, textarea {
 /* Hero handles its own nav offset; other sections scroll naturally */
 
 /* ==========================================================================
-   Navigation - Mobile Enhancements
-   ========================================================================== */
-
-@media (max-width: 768px) {
-  /* Show mobile nav, hide desktop nav */
-  .mobile-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .nav__links {
-    display: none;
-  }
-
-  /* Improve mobile nav touch targets */
-  .mobile-nav__link {
-    min-height: var(--touch-target-min);
-    padding: 0.75em 1em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .mobile-nav__logo {
-    min-height: var(--touch-target-min);
-  }
-
-  /* Active/pressed state for touch feedback */
-  .mobile-nav__link:active {
-    opacity: 0.7;
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
-  }
-
-  /* Ensure content has space for mobile nav */
-  #main-content {
-    padding-bottom: calc(var(--nav-height-mobile) + var(--safe-area-bottom));
-  }
-}
-
-@media (max-width: 480px) {
-  .mobile-nav__links {
-    gap: var(--space-xs, 8px);
-  }
-
-  .mobile-nav__link {
-    padding: 0.5em 0.75em;
-    font-size: 13px;
-  }
-}
-
-/* ==========================================================================
    Scrollytelling - About Section
    Hybrid pin/flow scroll with frame sequence and text animations
    ========================================================================== */
@@ -2445,19 +2276,6 @@ input, textarea {
   min-height: auto;
   position: relative;
   z-index: 10; /* Above about section */
-}
-
-/* Blueprint section mobile adjustments */
-@media (max-width: 768px) {
-  .blueprint-section {
-    margin-top: -80vh; /* Reduce pull-up for mobile scroll flow */
-  }
-}
-
-@media (max-width: 480px) {
-  .blueprint-section {
-    margin-top: -60vh; /* Further reduce on small phones */
-  }
 }
 
 /* About section container - hosts canvas and content */
@@ -2753,51 +2571,6 @@ input, textarea {
   /* Simplify text effects on mobile */
   .semantic-word .char {
     will-change: auto;
-  }
-
-  /* About section mobile adjustments */
-  .section--about {
-    margin-top: -20vh; /* Reduce pull-up on mobile */
-  }
-
-  /* Body text minimum sizing for readability */
-  .body-text {
-    font-size: clamp(18px, 4vw, 24px);
-  }
-
-  /* Hide sprite triggers that overflow viewport on mobile */
-  .sprite-trigger__sprite {
-    display: none;
-  }
-
-  /* Disable expensive animations on mobile */
-  .about-p1,
-  .about-p2,
-  .about-p3 {
-    filter: none !important;
-    will-change: auto;
-  }
-
-  .code-symbols {
-    display: none;
-  }
-
-  .path-svg {
-    display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .section--about {
-    margin-top: -10vh; /* Further reduce pull-up on small phones */
-  }
-
-  .about-content {
-    padding: var(--space-small);
-  }
-
-  .body-text {
-    font-size: clamp(16px, 5vw, 20px);
   }
 }
 

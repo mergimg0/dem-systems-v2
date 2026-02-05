@@ -56,22 +56,9 @@ const CONFIG = {
   crosshairX2: 0.64,   // 1228.8px
   crosshairVerticalX: 0.49, // 940.8px
 
-  // ScrollTrigger - base values (may be adjusted for mobile in getScrollConfig())
+  // ScrollTrigger
   scrollDistance: '200%', // 2 viewport heights of scroll
   scrubSmoothing: 1,      // 1 second smoothing
-
-  // Get responsive scroll config based on viewport
-  getScrollConfig: function() {
-    const width = window.innerWidth;
-    if (width <= 480) {
-      return { scrollDistance: '120%', scrubSmoothing: 0.3 };
-    } else if (width <= 768) {
-      return { scrollDistance: '150%', scrubSmoothing: 0.5 };
-    } else if (width <= 1024) {
-      return { scrollDistance: '180%', scrubSmoothing: 0.8 };
-    }
-    return { scrollDistance: this.scrollDistance, scrubSmoothing: this.scrubSmoothing };
-  }
 
   // Snap points (scroll percentages where animation pauses)
   snapPoints: [
