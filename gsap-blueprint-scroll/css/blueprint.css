@@ -10,8 +10,7 @@
   position: relative;
   background: #ffffff;
   overflow: hidden;
-  padding: 0;
-  margin: 0;
+  /* Note: padding and margin handled by main.css for layout positioning */
 }
 
 .blueprint-scroll-container {
